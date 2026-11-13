@@ -2,6 +2,8 @@
 
 A local FFmpeg test-pattern generator and video converter for macOS, with a browser interface at **http://localhost:9191**. Videos and settings stay on your computer; no account or external services are needed.
 
+![Test pattern generator showing the SMPTE colour bars preview and ProRes 422 HQ export summary](docs/screenshots/test-pattern-generator.jpg)
+
 ## Start
 
 Double-click **Start.command** in Finder, then open **http://localhost:9191**. Keep its Terminal window open while rendering. Press Control-C in that window to stop the server.
@@ -54,6 +56,8 @@ Uploads are limited to 25 MB and 20 megapixels; logos are orientation-corrected,
 ## Video converter
 
 Choose the **Video converter** tab and upload a local video (up to 20 GB). The app displays its codec, dimensions, frame rate, duration and audio-track count, then prepares a validated conversion plan.
+
+![Video converter showing an example source clip, delivery settings, and a ProRes 422 HQ conversion plan](docs/screenshots/video-converter.jpg)
 
 Available output presets:
 
