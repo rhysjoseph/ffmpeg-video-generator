@@ -13,7 +13,7 @@ import uuid
 import assets
 from engine import DURATIONS, Settings, probe, render
 from transcode import ConvertSettings, convert, plan
-from verification import check_contract, export_expectations, tool_versions, validate_export, verify
+from verification import loop_boundary, primary, check_contract, export_expectations, tool_versions, validate_export, verify
 
 
 def audio_durations(info):
@@ -21,8 +21,8 @@ def audio_durations(info):
             for s in info["streams"] if s["codec_type"] == "audio"]
 
 
-def exercise(seconds, directory, loop=False, keep=None):
-    settings = Settings.parse(dict(duration=seconds, rate="59.94p", pattern="scroll", container="mov",
+def exercise(seconds, directory, loop=False, keep=None, settings=None, profile="prores_hq"):
+    settings = settings or Settings.parse(dict(duration=seconds, rate="59.94p", pattern="scroll", container="mov",
                                    bit_depth=10, chroma="422", audio="four_pairs", seamless_loop=loop))
     source = directory / "generated.mov"
     target = directory / "converted.mov"
@@ -35,7 +35,7 @@ def exercise(seconds, directory, loop=False, keep=None):
     ident = uuid.uuid4().hex
     assets.register_upload(source, ident, "video", source.name)
     source, _ = assets.asset(ident, "video")
-    preset = ConvertSettings.parse(dict(source_id=ident, profile="prores_hq"))
+    preset = ConvertSettings.parse(dict(source_id=ident, profile=profile))
     expected = export_expectations({"kind": "conversion", "settings": asdict(preset), "conversion": plan(preset)})
     convert(preset, target)
     report = verify(target, reference=source, expected={**expected, "frames": frames}, details=False, loop=loop)
@@ -49,13 +49,18 @@ def exercise(seconds, directory, loop=False, keep=None):
     if loop and "loop_boundary" in report:
         boundary = report["loop_boundary"]
         extra = {"loop_boundary": boundary, "cycle_seconds": settings.runtime}
-        # A full cycle of the -20 dBFS, 1 kHz tone at 48 kHz wraps from -428 to 0 in s16.
-        for track in boundary["audio"]:
-            if track["offset_from_video_samples"] or any(abs(step-428)>2 for step in track["join_step_s16"]):
-                errors.append(f"Track {track['stream']} did not wrap at the expected tone phase.")
+        audio_streams = [stream for stream in info["streams"] if stream["codec_type"] == "audio"]
+        generated, findings = loop_boundary(source, primary(info), audio_streams, frames)
+        extra["generated_loop_boundary"] = generated
+        review.extend(findings)
+        for stage, result in (("generated", generated), ("converted", boundary)):
+            for track in result["audio"]:
+                # These fixtures use 48 kHz PCM and a continuous -20 dBFS, 1 kHz tone.
+                if track["offset_from_video_samples"] or any(abs(step-428)>2 for step in track["join_step_s16"]):
+                    errors.append(f"{stage} track {track['stream']} did not wrap at the expected tone phase.")
     if keep is not None and not errors:
         keep.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(target, keep / f"prores-hq-{seconds}s.mov")
+        shutil.copyfile(target, keep / f"{profile.replace('_', '-')}-{seconds}s.mov")
     return {**extra, "status": "failed" if errors else "review" if review else "checks passed",
             "errors": errors, "review": review, "expected_frames": frames, "generated": gate,
             "audio_seconds": audio, "converted": report.get("scan"), "comparison": report.get("comparison")}

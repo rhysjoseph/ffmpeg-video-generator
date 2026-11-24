@@ -51,7 +51,7 @@ function schedulePlan(){
   const seq=planSequence;planTimer=setTimeout(()=>loadPlan(seq,s),300);
 }
 async function loadPlan(seq,s){
-  try{const response=await fetch('/api/conversion-plan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(s)});const p=await response.json();if(seq!==planSequence)return;if(!response.ok)throw new Error(p.error);conversionPlan=p;conversionValid=true;$('conversion-error').textContent='';$('conversion-plan').textContent=p.label+'\n'+p.width+' × '+p.height+' · '+p.fps+' fps\n'+p.duration.toFixed(2)+' seconds · '+p.container.toUpperCase()+'\n'+p.pix_fmt+(p.hdr?'\nHDR transfer retained; no tone mapping.':'')+(s.logo_id?'\nLogo overlay enabled.':'');}
+  try{const response=await fetch('/api/conversion-plan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(s)});const p=await response.json();if(seq!==planSequence)return;if(!response.ok)throw new Error(p.error);conversionPlan=p;conversionValid=true;$('conversion-error').textContent='';$('conversion-plan').textContent=p.label+'\n'+p.width+' × '+p.height+' · '+p.fps+' fps\n'+p.duration.toFixed(2)+' seconds · '+p.container.toUpperCase()+'\n'+p.pix_fmt+' · '+p.color_space+' matrix / '+p.color_primaries+' primaries / '+p.color_transfer+' transfer'+(p.hdr?'\nHDR transfer retained; no tone mapping.':'')+(s.logo_id?'\nLogo overlay enabled.':'');}
   catch(exc){if(seq===planSequence){conversionValid=false;$('conversion-error').textContent=exc.message;}}
   finally{refreshConvertButton();}
 }

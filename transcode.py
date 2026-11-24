@@ -66,6 +66,14 @@ class ConvertSettings:
         return s
 
 
+def output_colour(v):
+    # Untagged HD material is treated as BT.709. Existing source colour tags are retained.
+    matrix = v.get("color_space") if v.get("color_space") in ("bt709", "bt470bg", "smpte170m", "bt2020nc", "bt2020c", "smpte240m") else "bt709"
+    primaries = v.get("color_primaries") if v.get("color_primaries") in ("bt709", "bt470bg", "smpte170m", "bt2020", "smpte432", "smpte431", "smpte240m") else "bt709"
+    transfer = v.get("color_transfer") if v.get("color_transfer") in ("bt709", "smpte170m", "bt2020-10", "bt2020-12", "smpte2084", "arib-std-b67", "iec61966-2-1", "linear", "gamma22", "gamma28", "smpte240m") else "bt709"
+    return {"color_space": matrix, "color_primaries": primaries, "color_transfer": transfer}
+
+
 def plan(s):
     s = ConvertSettings.parse(asdict(s))
     source, meta = asset(s.source_id, "video")
@@ -111,7 +119,13 @@ def plan(s):
     hdr = video.get("color_transfer") in ("smpte2084", "arib-std-b67")
     if s.logo_id and hdr:
         raise ValueError("Logo overlays on HDR sources require tone mapping. Disable the conversion logo to preserve HDR without changing its transfer function.")
-    return {"source": str(source), "name": meta["name"], "duration": duration, "width": width, "height": height,
+    colour = output_colour(video)
+    source_matrix = colour["color_space"]
+    if encoder == "dnxhd":
+        if source_matrix == "bt2020c":
+            raise ValueError("Constant-luminance BT.2020 needs a dedicated matrix conversion for DNx. Choose ProRes to retain it.")
+        colour["color_space"] = "bt709"
+    return {"source_matrix": source_matrix, **colour, "source": str(source), "name": meta["name"], "duration": duration, "width": width, "height": height,
             "fps": str(fps), "field_rate": source_rate is None or fps > source_rate, "label": label, "encoder": encoder, "profile": profile, "pix_fmt": pix,
             "container": container, "bitrate": bitrate, "video": video, "hdr": hdr,
             "audio_channels": [a["channels"] for a in meta["audio"]] if s.audio == "keep" else []}
@@ -122,17 +136,22 @@ def build_conversion(s, output):
     v, w, h = p["video"], p["width"], p["height"]
     args = [FFMPEG, "-hide_banner", "-loglevel", "warning", "-nostdin", "-y", "-filter_complex_threads", "2",
             "-xerror", "-err_detect", "explode", "-protocol_whitelist", "file,pipe", "-ss", str(s.start), "-i", p["source"]]
-    # Untagged HD material is treated as BT.709. Existing source colour tags are retained.
-    matrix = v.get("color_space") if v.get("color_space") in ("bt709", "bt470bg", "smpte170m", "bt2020nc", "bt2020c", "smpte240m") else "bt709"
-    primaries = v.get("color_primaries") if v.get("color_primaries") in ("bt709", "bt470bg", "smpte170m", "bt2020", "smpte432", "smpte431", "smpte240m") else "bt709"
-    transfer = v.get("color_transfer") if v.get("color_transfer") in ("bt709", "smpte170m", "bt2020-10", "bt2020-12", "smpte2084", "arib-std-b67", "iec61966-2-1", "linear", "gamma22", "gamma28", "smpte240m") else "bt709"
+    matrix, primaries, transfer = p["color_space"], p["color_primaries"], p["color_transfer"]
     in_range = "pc" if v.get("color_range") == "pc" else "tv"
     # All converter presets deliver legal-range YUV. Source colour primaries/transfer stay intact.
+    source_matrix = p["source_matrix"]
     cadence = "send_field" if p["field_rate"] else "send_frame"
     parity = s.deinterlace if s.deinterlace in ("tff", "bff") else "auto"
     deint = "interlaced" if s.deinterlace == "auto" else "all"
     filters = [f"bwdif=mode={cadence}:parity={parity}:deint={deint}",
-               f"setparams=colorspace={matrix}:color_primaries={primaries}:color_trc={transfer}:range={in_range}"]
+               f"setparams=colorspace={source_matrix}:color_primaries={primaries}:color_trc={transfer}:range={in_range}"]
+    if source_matrix != matrix:
+        # Changes Y'CbCr matrix coefficients only. Equal transfer/primaries on
+        # both sides prevent a gamut or transfer transform (including for PQ).
+        filters.append(f"colorspace=iall=bt709:ispace={source_matrix}:irange={in_range}:"
+                       f"all=bt709:space={matrix}:range=tv:format=yuv444p12:fast=1")
+        filters.append(f"setparams=colorspace={matrix}:color_primaries={primaries}:color_trc={transfer}:range=tv")
+        in_range = "tv"
     # Keep square-pixel sources on a single scaling pass. Treat unspecified SAR as square.
     filters.append("scale=w='max(2,round(iw*if(gt(sar,0),sar,1)/2)*2)':h=ih:flags=lanczos,setsar=1")
     mode = "decrease" if s.fit == "pad" else "increase"
@@ -163,7 +182,8 @@ def build_conversion(s, output):
              "-c:v", p["encoder"], "-profile:v", p["profile"], "-pix_fmt", p["pix_fmt"], "-threads", "4",
              "-color_range", "tv", "-colorspace", matrix, "-color_primaries", primaries, "-color_trc", transfer]
     if p["encoder"] == "libx265":
-        args += ["-preset", s.speed, "-crf", str(s.proxy_crf), "-x265-params", "pools=4:frame-threads=2:log-level=error", "-tag:v", "hvc1"]
+        # Protect flat chroma patches at high CRF while retaining the selected luma CRF and speed.
+        args += ["-preset", s.speed, "-crf", str(s.proxy_crf), "-x265-params", "pools=4:frame-threads=2:log-level=error:cbqpoffs=-2:crqpoffs=-2", "-tag:v", "hvc1"]
     elif p["encoder"] == "prores_ks":
         args += ["-alpha_bits", "0"]
     if p["bitrate"]:

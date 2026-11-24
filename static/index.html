@@ -40,7 +40,7 @@
           <div class="fields extra-fields"><label>Video codec<select name="codec"><option value="auto">Auto · match bit depth</option><option value="h264">H.264 / AVC</option><option value="hevc">H.265 / HEVC</option></select></label><label>Quality<select name="quality"><option value="maximum">Maximum · CRF 10</option><option value="high" selected>High · CRF 16</option><option value="compact">Compact · CRF 23</option></select></label></div>
           <div class="fields extra-fields"><label>Encoding speed<select name="preset"><option value="ultrafast">Quickest · larger files</option><option value="fast" selected>Fast</option><option value="medium">Balanced</option><option value="slow">Slow · smaller files</option></select></label></div>
           <p class="note" id="encoding-note">Auto uses H.264 for 8/10-bit and HEVC for 12-bit.</p>
-          <p class="note">High-depth files use the selected pixel format. FFmpeg's built-in bars and text originate at 8-bit precision.</p>
+          <p class="note">HD bars and their ramp use native 8-, 10- or 12-bit values. Classic SMPTE bars, PAL bars and text start at 8-bit precision.</p>
         </section>
         <section class="panel"><div class="section-title"><span class="step">04</span><h2>Burn-in overlays</h2></div>
           <label class="toggle-row"><span><strong>Running timecode</strong><small id="timecode-note">Non-drop · starts at 00:00:00:00</small></span><input type="checkbox" name="timecode" checked><span class="switch"></span></label>
@@ -89,7 +89,18 @@
       <details id="qc-details" hidden><summary>Technical report</summary><pre class="conversion-plan" id="qc-json"></pre><a id="qc-download" download="verification.json">Download JSON</a></details>
       <details class="extra-label" id="matrix-controls">
         <summary>Test codec profiles and resolutions</summary>
-        <p class="note">Compare every decoded frame with its reference. Full-length profile runs can take hours, especially in UHD. Starting a run replaces the previous matrix report.</p>
+        <p class="note">Full-length runs can take hours, especially in UHD. Download the current results before starting another suite.</p>
+        <label class="extra-label">Test suite<select id="matrix-suite">
+          <option value="profiles">Codec profiles by resolution</option>
+          <option value="generate">Custom encoding settings · pairwise</option>
+          <option value="editing">Editing encoders · colour and field order</option>
+          <option value="colour">SDR colour profiles · independent code values</option>
+          <option value="bars">HD bars · native codes, ramp and transition</option>
+          <option value="convert">Converter · moving patches and scaler geometry</option>
+          <option value="proxy">HEVC proxies · quality and speed</option>
+          <option value="duration">MOV loops and conversions · all four lengths</option>
+          <option value="aac">MP4 and MPEG-TS loop joins · all four lengths</option>
+        </select></label>
         <label class="extra-label">Test resolution<select id="matrix-resolution"><option value="all">All four resolutions</option><option>1280x720</option><option>1920x1080</option><option>2560x1440</option><option>3840x2160</option></select></label>
         <label class="extra-label">Test length<select id="matrix-duration"><option value="">Quick check · 8 frames</option><option value="10">10 seconds</option><option value="30">30 seconds</option><option value="60">60 seconds</option><option value="120">120 seconds</option></select></label>
         <button type="button" class="primary extra-label" id="matrix-start">Run profile tests</button>

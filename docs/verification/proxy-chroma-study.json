@@ -1,0 +1,192 @@
+{
+  "docker": [
+    {
+      "profile": "hevc_proxy",
+      "chroma_qp_offset": 0,
+      "bytes": 10508,
+      "top": 1.023253761574074,
+      "bottom": 3.181273871527778,
+      "flat_errors": 0,
+      "errors": [
+        "bottom_half exceeds the SDR fixture difference limits."
+      ]
+    },
+    {
+      "profile": "hevc_proxy",
+      "chroma_qp_offset": -2,
+      "bytes": 9712,
+      "top": 1.0877763310185184,
+      "bottom": 2.3394639756944446,
+      "flat_errors": 0,
+      "errors": []
+    },
+    {
+      "profile": "hevc_proxy",
+      "chroma_qp_offset": -3,
+      "bytes": 10208,
+      "top": 1.4524934895833332,
+      "bottom": 2.683752170138889,
+      "flat_errors": 0,
+      "errors": []
+    },
+    {
+      "profile": "hevc_proxy",
+      "chroma_qp_offset": -4,
+      "bytes": 9317,
+      "top": 1.165099826388889,
+      "bottom": 2.2894835069444444,
+      "flat_errors": 0,
+      "errors": []
+    },
+    {
+      "profile": "hevc_proxy",
+      "chroma_qp_offset": -6,
+      "bytes": 9630,
+      "top": 1.2899399594907408,
+      "bottom": 2.4092158564814814,
+      "flat_errors": 0,
+      "errors": []
+    },
+    {
+      "profile": "hevc_proxy10",
+      "chroma_qp_offset": 0,
+      "bytes": 17937,
+      "top": 1.4576331018518518,
+      "bottom": 3.044025848765432,
+      "flat_errors": 0,
+      "errors": [
+        "bottom_half exceeds the SDR fixture difference limits."
+      ]
+    },
+    {
+      "profile": "hevc_proxy10",
+      "chroma_qp_offset": -2,
+      "bytes": 18341,
+      "top": 1.5548276748971193,
+      "bottom": 2.9494315843621397,
+      "flat_errors": 0,
+      "errors": []
+    },
+    {
+      "profile": "hevc_proxy10",
+      "chroma_qp_offset": -3,
+      "bytes": 18381,
+      "top": 1.546390496399177,
+      "bottom": 2.81664866255144,
+      "flat_errors": 0,
+      "errors": []
+    },
+    {
+      "profile": "hevc_proxy10",
+      "chroma_qp_offset": -4,
+      "bytes": 18749,
+      "top": 1.393094135802469,
+      "bottom": 2.899490740740741,
+      "flat_errors": 0,
+      "errors": []
+    },
+    {
+      "profile": "hevc_proxy10",
+      "chroma_qp_offset": -6,
+      "bytes": 19724,
+      "top": 1.5884580761316873,
+      "bottom": 2.9415869341563785,
+      "flat_errors": 0,
+      "errors": []
+    }
+  ],
+  "macos": [
+    {
+      "profile": "hevc_proxy",
+      "chroma_qp_offset": 0,
+      "bytes": 9265,
+      "top": 0.9634049479166666,
+      "bottom": 2.2670052083333334,
+      "flat_errors": 0,
+      "errors": []
+    },
+    {
+      "profile": "hevc_proxy",
+      "chroma_qp_offset": -2,
+      "bytes": 9355,
+      "top": 0.6251410590277777,
+      "bottom": 2.1912745949074073,
+      "flat_errors": 0,
+      "errors": []
+    },
+    {
+      "profile": "hevc_proxy",
+      "chroma_qp_offset": -3,
+      "bytes": 9497,
+      "top": 1.0978125,
+      "bottom": 1.9854361979166666,
+      "flat_errors": 0,
+      "errors": []
+    },
+    {
+      "profile": "hevc_proxy",
+      "chroma_qp_offset": -4,
+      "bytes": 9414,
+      "top": 0.7548459201388888,
+      "bottom": 1.9342397280092594,
+      "flat_errors": 0,
+      "errors": []
+    },
+    {
+      "profile": "hevc_proxy",
+      "chroma_qp_offset": -6,
+      "bytes": 9646,
+      "top": 0.6698495370370371,
+      "bottom": 1.4116153067129629,
+      "flat_errors": 0,
+      "errors": []
+    },
+    {
+      "profile": "hevc_proxy10",
+      "chroma_qp_offset": 0,
+      "bytes": 18489,
+      "top": 1.4576331018518518,
+      "bottom": 3.0261467978395062,
+      "flat_errors": 0,
+      "errors": [
+        "bottom_half exceeds the SDR fixture difference limits."
+      ]
+    },
+    {
+      "profile": "hevc_proxy10",
+      "chroma_qp_offset": -2,
+      "bytes": 19292,
+      "top": 1.5590313143004115,
+      "bottom": 2.502584233539095,
+      "flat_errors": 0,
+      "errors": []
+    },
+    {
+      "profile": "hevc_proxy10",
+      "chroma_qp_offset": -3,
+      "bytes": 19608,
+      "top": 1.5397334747942386,
+      "bottom": 2.880722093621399,
+      "flat_errors": 0,
+      "errors": []
+    },
+    {
+      "profile": "hevc_proxy10",
+      "chroma_qp_offset": -4,
+      "bytes": 20987,
+      "top": 1.4001183127572017,
+      "bottom": 2.8251707175925924,
+      "flat_errors": 0,
+      "errors": []
+    },
+    {
+      "profile": "hevc_proxy10",
+      "chroma_qp_offset": -6,
+      "bytes": 21796,
+      "top": 1.5759844393004114,
+      "bottom": 2.6642862654320987,
+      "flat_errors": 0,
+      "errors": []
+    }
+  ]
+}

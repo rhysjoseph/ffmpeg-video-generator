@@ -63,7 +63,79 @@ def validate_export(path, duration, fps, started, cancel):
         return {"frames_decoded": count, "audio_decode": "all mapped tracks", "decoder_errors": 0}
 
 
-def scan(path, video, directory, has_audio):
+def frame_properties(path, video, fields, started=None, cancel=None):
+    with tempfile.TemporaryFile(mode="w+") as flags:
+        args = [FFPROBE, "-v", "error", "-protocol_whitelist", "file,pipe", "-select_streams",
+                str(video["index"]), "-show_frames", "-show_entries", "frame=" + fields, "-of", "compact=p=0:nk=0", str(path)]
+        with subprocess.Popen(args, stdout=flags) as proc:
+            if started:
+                started(proc)
+            try:
+                code = proc.wait(timeout=3600)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                raise
+            if cancel and cancel.is_set():
+                raise InterruptedError("Verification cancelled.")
+            if code:
+                raise ValueError("Could not read decoded frame properties.")
+        flags.seek(0)
+        for line in flags:
+            values = dict(part.split("=", 1) for part in line.strip().split("|") if "=" in part)
+            if "interlaced_frame" in values:
+                yield values
+
+
+def dominance(frame):
+    if frame["interlaced_frame"] == "0":
+        return "progressive"
+    return "tff" if frame.get("top_field_first") == "1" else "bff"
+
+
+def frame_measurements(path, video, expected_fps, started=None, cancel=None):
+    # Some codecs omit field_order at stream level. Check flags on decoded frames.
+    frame_colour = {key: {} for key in ("color_space", "color_primaries", "color_transfer", "color_range")}
+    field_counts = {"progressive": 0, "tff": 0, "bff": 0}
+    interval = 1 / (Fraction(expected_fps) * Fraction(video["time_base"])) if expected_fps else None
+    first_pts = previous_pts = None
+    pts_count = non_monotonic = 0
+    max_error = 0
+    fields = "pts,interlaced_frame,top_field_first," + ",".join(frame_colour)
+    for frame in frame_properties(path, video, fields, started, cancel):
+        field_counts[dominance(frame)] += 1
+        for tag, counts in frame_colour.items():
+            value = frame.get(tag, "unknown")
+            counts[value] = counts.get(value, 0) + 1
+        if interval and frame.get("pts", "").lstrip("-").isdigit():
+            pts = int(frame["pts"])
+            if first_pts is None:
+                first_pts = pts
+            if previous_pts is not None and pts <= previous_pts:
+                non_monotonic += 1
+            max_error = max(max_error, abs(pts - first_pts - pts_count * interval))
+            previous_pts = pts
+            pts_count += 1
+    cadence = {"timestamps": pts_count, "non_increasing": non_monotonic, "max_error_ticks": float(max_error),
+               "time_base": video["time_base"]} if interval else None
+    return {"frame_colour": frame_colour, "cadence": cadence, "scan_counts": field_counts}
+
+
+def frame_findings(measurements, count, expected):
+    errors, review = [], []
+    cadence = measurements["cadence"]
+    if cadence and (cadence["timestamps"] != count or cadence["non_increasing"] or cadence["max_error_ticks"] > 1):
+        errors.append("Decoded presentation timestamps differ from the selected constant frame rate.")
+    for tag, counts in measurements["frame_colour"].items():
+        if tag in expected:
+            for value, total in counts.items():
+                if value in ("unknown", "unspecified"):
+                    review.append(f"{tag} is unreported on {total} decoded pictures.")
+                elif value != expected[tag]:
+                    errors.append(f"{total} decoded pictures report {tag}={value}, expected {expected[tag]}.")
+    return errors, review
+
+
+def scan(path, video, directory, has_audio, expected_fps=None):
     # Keep per-frame records on temporary disk and bound the dashboard response.
     filters = "freezedetect=n=-60dB:d=2,signalstats,metadata=print:file=levels"
     args = decode_input(path) + ["-map", f"0:{video['index']}", "-vf", filters, "-fps_mode", "passthrough",
@@ -97,20 +169,8 @@ def scan(path, video, directory, has_audio):
             if name in ("YMIN", "UMIN", "VMIN", "YMAX", "UMAX", "VMAX"):
                 op = min if name.endswith("MIN") else max
                 levels[name] = op(levels.get(name, float(value)), float(value))
-    # Some codecs omit field_order at stream level. Check flags on decoded frames.
-    field_counts = {"progressive": 0, "tff": 0, "bff": 0}
-    with tempfile.TemporaryFile(mode="w+") as flags:
-        subprocess.run([FFPROBE, "-v", "error", "-protocol_whitelist", "file,pipe", "-select_streams",
-                        str(video["index"]), "-show_frames", "-show_entries", "frame=interlaced_frame,top_field_first",
-                        "-of", "compact=p=0:nk=0", str(path)], stdout=flags, check=True, timeout=3600)
-        flags.seek(0)
-        for line in flags:
-            values = dict(part.split("=", 1) for part in line.strip().split("|") if "=" in part)
-            if "interlaced_frame" in values:
-                key = "progressive" if values["interlaced_frame"] == "0" else (
-                    "tff" if values.get("top_field_first") == "1" else "bff")
-                field_counts[key] += 1
-    return {"decoded_frames": frames, "scan_counts": field_counts, "consecutive_identical": repeats, "near_freezes": count,
+    return {**frame_measurements(path, video, expected_fps), "decoded_frames": frames,
+            "consecutive_identical": repeats, "near_freezes": count,
             "first_freeze_starts_seconds": freezes, "sample_extrema": levels}
 
 
@@ -142,9 +202,14 @@ def timestamps(path):
 def compare(path, video, reference, directory):
     ref = primary(probe(reference))
     width, height = video["width"], video["height"]
+    orders = [stream.get("field_order") for stream in (ref, video)]
+    if any(order in ("tt", "tb", "bb", "bt") for order in orders):
+        def decoded_order(file, stream):
+            return {dominance(frame) for frame in frame_properties(file, stream, "interlaced_frame,top_field_first")}
+        order = decoded_order(reference, ref)
+        if (width, height) != (ref["width"], ref["height"]) or order not in ({"tff"}, {"bff"}) or order != decoded_order(path, video):
+            raise ValueError("Woven reference comparison requires matching raster and decoded field dominance.")
     for stream in (ref, video):
-        if stream.get("field_order") not in ("progressive", None, "unknown"):
-            raise ValueError("Reference comparison requires progressive pictures.")
         if stream.get("color_transfer") in ("smpte2084", "arib-std-b67"):
             raise ValueError("Reference comparison supports SDR pictures.")
     def dar(stream):
@@ -224,6 +289,7 @@ def export_expectations(job):
         width, height = plan["width"], plan["height"]
         fps = Fraction(plan["fps"])
         expected = {"field_order": "progressive", "color_range": "tv"}
+        expected.update({k: plan[k] for k in ("color_space", "color_primaries", "color_transfer") if k in plan})
         if "audio_channels" in plan:
             channels = plan["audio_channels"]
             expected.update(audio_tracks=len(channels), audio_channels=channels,
@@ -237,7 +303,8 @@ def export_expectations(job):
         fps = s.fps
         expected = {"audio_tracks": s.pairs, "audio_channels": [2]*s.pairs,
                     "audio_codecs": ["pcm_s24le" if container == "mov" else "aac"]*s.pairs,
-                    "color_space": s.colour_tags[0], "color_range": s.video_range}
+                    "color_space": s.colour_tags[0], "color_primaries": s.colour_tags[1],
+                    "color_transfer": s.colour_tags[2], "color_range": s.video_range}
         if s.seamless_loop:
             expected["frames"] = s.duration * round(s.fps)
             if container == "mov":
@@ -380,7 +447,7 @@ def verify(path, reference=None, expected=None, details=True, loop=False):
         info["format"].pop("filename", None)
         with tempfile.TemporaryDirectory(prefix="pattern-qc-") as temp:
             directory = Path(temp)
-            report["scan"] = scan(path, video, directory, bool(audio))
+            report["scan"] = scan(path, video, directory, bool(audio), (expected or {}).get("fps"))
             count = report["scan"]["decoded_frames"]
             if loop:
                 report["loop_boundary"], findings = loop_boundary(path, video, audio, count)
@@ -389,7 +456,15 @@ def verify(path, reference=None, expected=None, details=True, loop=False):
                 report["errors"].append("Decoded count differs from the declared frame count.")
             if report["scan"]["consecutive_identical"] or report["scan"]["near_freezes"]:
                 report["review"].append("Repeated or near-static pictures detected. Static patterns can be intentional.")
+            if not expected:
+                declared = {tag: video[tag] for tag in report["scan"]["frame_colour"]
+                            if video.get(tag) not in (None, "unknown", "unspecified")}
+                conflicts, missing = frame_findings(report["scan"], count, declared)
+                report["review"].extend(conflicts + missing)
             if expected:
+                errors, review = frame_findings(report["scan"], count, expected)
+                report["errors"].extend(errors)
+                report["review"].extend(review)
                 errors, review = check_contract(info, expected, count, report["scan"]["scan_counts"])
                 report["errors"].extend(errors)
                 report["review"].extend(review)

@@ -1,8 +1,12 @@
 # File verification and scaler qualification
 
-Open **Verify video** to check a completed export or upload a file. A completed export has a saved delivery specification, so the verifier can also compare the measured stream against the requested settings. **Download JSON** saves the measurements. A separate automatic check decodes the finished picture and all audio tracks and checks the length before the application makes an export available for download.
+Open **Verify video** to check a completed export or upload a file. A completed export has a saved delivery specification, so the verifier can also compare the measured stream against the requested settings. **Download JSON** saves the measurements. A separate automatic check decodes the finished picture and all audio tracks and checks the length before the application makes an export available for download. Completed exports also pass a decoded-frame check for cadence, colour signalling and field dominance against the export settings.
 
-## Qualification results, 24 November 2026
+## Signal and conversion qualification
+
+The November follow-up measures native HD bar codes, independent SDR colour transforms, picture timestamps and decoded colour signalling. It covers all four lengths, the codec-by-resolution sweep and conversion from both limited- and full-range test sources. The measurements, exceptions and reproduction commands are in the [signal qualification report](signal-qualification.md).
+
+## Earlier profile qualification, 24 November 2026
 
 | Environment | Supported cases | Checks passed | Review | Failed | Unsupported |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -88,7 +92,7 @@ docker compose cp studio:/app/outputs/manual-matrix.json ./manual-matrix.json
 
 | Path | Coverage at each resolution | Reference |
 | --- | --- | --- |
-| Generator, custom encoding | H.264 at 8/10 bits and HEVC at 8/10/12 bits, each at 4:2:0, 4:2:2 and 4:4:4 in MOV, MP4 and MPEG-TS | Lossless FFV1 recording of FFmpeg's HD bars at the target raster, with explicit BT.709 tags |
+| Generator, custom encoding | H.264 at 8/10 bits and HEVC at 8/10/12 bits, each at 4:2:0, 4:2:2 and 4:4:4 in MOV, MP4 and MPEG-TS | Lossless FFV1 recording of the generator's HD plate at the target raster with explicit BT.709 tags. The original sweep used FFmpeg's HD bars |
 | Generator, editing profiles | Six ProRes and five DNxHR MOV profiles | Same reference, compared across every frame |
 | Converter | All 14 presets, including both HEVC proxies | Generated moving 1080p H.264 10-bit 4:2:2 source with timecode, moving marker and four stereo audio tracks |
 | DNxHD HQ | 1080p25 in the sweep. Other supported 1080p rates have separate regression tests | Matching 25p moving source |
@@ -106,7 +110,7 @@ The four target sizes are 1280×720, 1920×1080, 2560×1440 and 3840×2160. The 
 | Payload | The report includes an initial packet sample with SHA-256 payload hashes and a sample of H.264/HEVC parameter-set fields when available. This is a diagnostic sample of the beginning of the stream. |
 | Result | **Failed** identifies a decode, comparison or contract error. **Review** identifies a finding that needs interpretation, including intentional static pictures or an unreported ProRes range field. **Checks passed** applies to the checks performed. |
 
-To compare picture content, supply a progressive SDR reference of the same shot, start frame, timing and display aspect. When resolutions differ, the verifier resizes the reference with bicubic interpolation for comparison against the converter's Lanczos result. Trimmed, cropped and retimed exports need an independently prepared reference for that edit. The report checks every decoded frame, compares relative timestamps within 1 ms, and measures the upper and lower halves separately. The RGB comparison uses 8-bit samples. Native signal measurements and encoded pixel-format checks provide separate evidence about precision.
+To compare picture content, supply an SDR reference of the same shot, start frame, timing and display aspect. Woven interlaced comparisons require matching rasters and decoded field dominance. When resolutions differ, the verifier resizes the reference with bicubic interpolation for comparison against the converter's Lanczos result. Trimmed, cropped and retimed exports need an independently prepared reference for that edit. The report checks every decoded frame, compares relative timestamps within 1 ms, and measures the upper and lower halves separately. The RGB comparison uses 8-bit samples. Native signal measurements and encoded pixel-format checks provide separate evidence about precision.
 
 The fixture limits are a worst-frame mean absolute channel error of 3 codes per half and at most 0.5% of channel samples differing by more than 32 codes per half. A separate check examines 32 patches distributed across the picture. Where each reference channel varies by at most 3 codes, any difference above 32 raises a finding and records the first affected frame and patch. This catches sparse speckles that a whole-picture mean could hide. These are project regression limits. Film grain, aggressive compression, intended grade changes, errors outside sampled flat patches and low-bit differences need separate evaluation.
 

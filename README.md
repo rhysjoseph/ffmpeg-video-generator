@@ -16,7 +16,7 @@ docker compose up -d --build --wait
 
 Open [Pattern Studio](http://localhost:9191). Docker Desktop lists the application as **pattern-studio**. The image includes Python, Pillow, fonts, FFmpeg, ffprobe and MediaInfo CLI and runs as an unprivileged user. The published port is bound to localhost. Stop the native launcher first if it already occupies port 9191. Named volumes retain uploads, exports and the latest verification matrix across container restarts. Use `docker compose stop` and `docker compose start` to manage it.
 
-Open **Verify video** to inspect a file or completed export, compare it with a reference, or run the generator and converter across codec profiles and resolutions. See the [qualification guide](docs/verification/README.md) for the test matrix, thresholds, external QC tools and ImagePRO-4K baseline.
+Open **Verify video** to inspect a file or completed export, compare it with a reference, or run the generator and converter across codec profiles and resolutions. The test suite selector includes native bar codes, independent SDR colour checks, codec settings, converter profiles and full-length loop tests. See the [qualification guide](docs/verification/README.md) for the test matrix, thresholds, external QC tools and ImagePRO-4K baseline.
 
 ## Start
 
@@ -86,7 +86,7 @@ Choose source size, a standard size or even custom dimensions from 128–8192 pi
 
 Trim start/length are in seconds; length 0 means to the end. All audio tracks are retained by default: 48 kHz 24-bit PCM in MOV, 48 kHz AAC in proxies. Audio can be removed. Subtitles, chapters, data tracks and extra video streams are not copied. The first non-attached-picture video stream is used.
 
-Output colour is limited-range YUV. Source colour primaries, matrix and transfer are retained where recognised; missing/unsupported tags use BT.709 defaults. HDR transfer tags are retained without tone mapping or a guarantee of preserving every HDR mastering metadata item. SDR logos are colour-converted for SDR source profiles. Logo compositing onto HDR footage is blocked to avoid inserting incorrectly mapped artwork; convert without a logo or use a separate colour-managed workflow.
+Output colour is limited-range YUV. Recognised source primaries and transfer are retained. DNx uses a BT.709 output matrix and remaps the source samples. Other presets retain the recognised source matrix. Missing or unsupported tags use BT.709 defaults. HDR transfer tags are retained without tone mapping or a guarantee of preserving every HDR mastering metadata item. SDR logos are colour-converted for SDR source profiles. Logo compositing onto HDR footage is blocked to avoid inserting incorrectly mapped artwork; convert without a logo or use a separate colour-managed workflow.
 
 To reuse the generator's logo, enable **Use uploaded logo** on the conversion tab. Its placement and size controls are shared with the generator. Source uploads are working copies: originals stay unchanged. Working copies and logo files remain in `uploads/`; outputs and metadata remain in `outputs/`. A refresh resets the current upload selection but retains local files. You can remove unused working copies from `uploads/` while the app is stopped. Large intermediate codecs need substantial output disk space.
 
@@ -96,7 +96,7 @@ Conversions and pattern generation share the same single-job queue, progress dis
 
 | Setting | Output |
 | --- | --- |
-| HD SMPTE Bars | FFmpeg `smptehdbars`, based on SMPTE RP 219-2002 |
+| HD SMPTE Bars | Native-depth HD bars with the RP 219-2002 75% white and black subpatterns |
 | SMPTE Bars | FFmpeg `smptebars`, based on EG 1-1990 |
 | PAL 75% / 100% | FFmpeg `pal75bars` / `pal100bars`, EBU PAL levels |
 | Moving Colour Bars | HD bars, horizontal scroll with an eight-second cycle |
@@ -128,9 +128,9 @@ Pillow renders the text as a small video strip piped to FFmpeg, so FFmpeg's opti
 
 All nine depth/chroma combinations are available with HEVC in MP4, MOV and MPEG-TS. H.264 supports 8/10-bit at all three chroma settings. Auto chooses H.264 for 8/10-bit and HEVC for 12-bit. The app checks the installed encoder’s pixel-format support and probes the actual output; it rejects an unexpected downgrade. Old exports retain their original formats.
 
-The FFmpeg bar sources and Pillow text originate at 8-bit precision. Higher-depth output is real 10/12-bit encoding and adds precision during colour conversion; it does not turn the built-in sources into native 10/12-bit calibration ramps. Compositing retains 4:4:4 chroma (10-bit working precision for higher-depth exports), then converts to the requested output format. The browser preview is an 8-bit SDR representation of the selected colour output.
+The HD bars and moving HD bars use native 8-, 10- or 12-bit patch values and a nominal black-to-white ramp. The compositor preserves the 12-bit plate outside its graphics. FFmpeg supplies the classic SMPTE and PAL bars at 8-bit source precision. Pillow text starts at 8-bit and high-depth graphics composite at 10-bit. The browser preview is an 8-bit SDR representation of the selected colour output.
 
-Limited range uses nominal luma 16–235 and chroma 16–240 at 8-bit, scaled by 4 at 10-bit and 16 at 12-bit. Full range spans 0–255, 0–1023 or 0–4095. BT.2020 uses the SDR BT.2020-10 transfer flag at 8/10 bits and BT.2020-12 at 12 bits. PAL and NTSC profiles use their respective BT.601 matrix/primaries and SMPTE 170M transfer.
+Limited range uses nominal luma 16–235 and chroma 16–240 at 8-bit, scaled by 4 at 10-bit and 16 at 12-bit. Full range spans 0–255, 0–1023 or 0–4095. BT.2020 uses the SDR BT.2020-10 transfer flag at 8/10 bits and BT.2020-12 at 12 bits. PAL and NTSC profiles use their respective BT.601 primaries and SMPTE 170M transfer. DNxHD and DNxHR use BT.709 matrix coefficients with the selected or source primaries and transfer. The converter remaps the component samples before encoding. Other supported file profiles retain the selected matrix.
 
 Maximum / High / Compact select CRF 10 / 16 / 23; lower CRF favours fidelity and larger files. These are lossy settings, and equal CRF values are not identical quality across codecs. Slower presets generally improve compression efficiency. Hardware players and QuickTime may not support high-depth or 4:2:2/4:4:4 profiles; use a compatible NLE or decoder.
 

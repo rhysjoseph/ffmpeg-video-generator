@@ -9,6 +9,7 @@ import threading
 
 from engine import DURATIONS, RESOLUTIONS, ROOT
 from verification import tool_versions
+from signal_qualification import GROUPS
 from datetime import datetime, timezone
 
 
@@ -19,7 +20,9 @@ class MatrixRunner:
         self.lock = threading.Lock()
         self.process = None
 
-    def start(self, resolution, duration=None):
+    def start(self, resolution, duration=None, suite="profiles"):
+        if suite not in ("profiles", *GROUPS):
+            raise ValueError("Choose a supported qualification suite.")
         if resolution != "all" and resolution not in RESOLUTIONS:
             raise ValueError("Choose a supported output resolution.")
         if duration is not None and (type(duration) is not int or duration not in DURATIONS):
@@ -30,17 +33,23 @@ class MatrixRunner:
             self.directory.mkdir(parents=True, exist_ok=True)
             environment = {"started_utc": datetime.now(timezone.utc).isoformat(), "tools": tool_versions(),
                            "resolution": resolution}
-            if duration is None:
+            if suite != "profiles":
+                environment["suite"] = suite
+                environment.pop("resolution")
+            elif duration is None:
                 environment["frames_per_fixture"] = 8
             else:
                 environment["duration_seconds"] = duration
             (self.directory / "environment.json").write_text(json.dumps(environment))
             self.report.unlink(missing_ok=True)
             args = [sys.executable, str(ROOT / "profile_matrix.py"), "--report", str(self.report)]
-            if resolution != "all":
-                args += ["--resolution", resolution]
-            if duration is not None:
-                args += ["--duration", str(duration)]
+            if suite == "profiles":
+                if resolution != "all":
+                    args += ["--resolution", resolution]
+                if duration is not None:
+                    args += ["--duration", str(duration)]
+            else:
+                args = [sys.executable, str(ROOT / "signal_qualification.py"), suite, "--report", str(self.report)]
             with (self.directory / "matrix.log").open("w") as log:
                 self.process = subprocess.Popen(args, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
 
@@ -48,7 +57,8 @@ class MatrixRunner:
         with self.lock:
             code = self.process.poll() if self.process else None
             running = self.process is not None and code is None
-            cases = json.loads(self.report.read_text()) if self.report.exists() else []
+            report = json.loads(self.report.read_text()) if self.report.exists() else []
+            cases = report["cases"] if isinstance(report, dict) else report
             if running:
                 state = "running"
             elif self.process:
@@ -63,11 +73,16 @@ class MatrixRunner:
                       "unsupported":sum(c["status"] == "unsupported" for c in cases)}
             if cases:
                 last = cases[-1]
-                result["latest"] = " · ".join(last[k] for k in ("mode","profile","resolution","status"))
+                if isinstance(report, dict):
+                    result["latest"] = f"{report['group']} · {len(cases)}/{report['planned']} · {last['status']}"
+                else:
+                    result["latest"] = " · ".join(last[k] for k in ("mode","profile","resolution","status"))
             if full:
                 environment = self.directory / "environment.json"
                 if environment.exists():
                     result["environment"] = json.loads(environment.read_text())
+                if isinstance(report, dict):
+                    result.update(report)
                 result["cases"] = cases
                 logfile = self.directory / "matrix.log"
                 if state == "failed" and logfile.exists():

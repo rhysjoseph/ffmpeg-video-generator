@@ -15,6 +15,7 @@ from fractions import Fraction
 from PIL import Image, ImageDraw, ImageFont
 from assets import validate_logo, logo_graph
 from delivery import EDITING_PROFILES
+from hd_bars import source_args
 
 ROOT = Path(__file__).resolve().parent
 FFMPEG = os.environ.get("FFMPEG_PATH") or shutil.which("ffmpeg")
@@ -170,7 +171,8 @@ class Settings:
         matrix, primaries, transfer = COLOURS[self.colour]
         if self.colour == "bt2020" and self.bit_depth == 12:
             transfer = "bt2020-12"
-        return matrix, primaries, transfer
+        # This FFmpeg VC-3 encoder writes the BT.709 matrix in the picture header.
+        return ("bt709" if self.encoder == "dnxhd" else matrix), primaries, transfer
 
 
 def timecode(frame: int, fps: Fraction, drop: bool) -> str:
@@ -254,14 +256,15 @@ def build_command(s, output, *, duration=None, preview=False):
     period = float(Fraction(cycle, 1) / s.fps)
     pulse = float(Fraction(pulse_frames, 1) / s.fps)
     source = s.pattern if s.pattern in ("smptehdbars", "smptebars", "pal75bars", "pal100bars") else "smptehdbars"
-    if s.pattern in ("lipsync", "sweep"):
-        video = f"color=c=0x10141c:s={w}x{h}:r={rate}"
+    hd_bars = s.pattern in ("smptehdbars", "scroll")
+    preserve_plate = hd_bars and s.bit_depth == 12 and (s.freeze_box or s.timecode or s.label or s.logo_id)
+    if hd_bars:
+        input_args, video = source_args(w, h, s.bit_depth, source_rate, s.interlaced)
     else:
-        video = f"{source}=s={w}x{h}:r={rate}"
-    # Keep full chroma through compositing. Native FFmpeg bars have 8-bit levels;
-    # higher-depth output preserves those sources and gains conversion precision.
-    # Fix bar geometry before negotiating the 8/10-bit compositing format.
-    video += f",format=yuv444p,format={work_format}"
+        source_filter = (f"color=c=0x10141c:s={w}x{h}:r={rate}" if s.pattern in ("lipsync", "sweep")
+                         else f"{source}=s={w}x{h}:r={rate}")
+        input_args = ["-f", "lavfi", "-i", source_filter]
+        video = f"format=yuv444p,format={work_format}"
     # Normalise source matrices into the BT.709 working space.
     if source in ("smptebars", "pal75bars", "pal100bars"):
         video += f",scale=in_color_matrix=bt601:out_color_matrix=bt709:in_range=tv:out_range=tv,format={work_format}"
@@ -281,9 +284,12 @@ def build_command(s, output, *, duration=None, preview=False):
                   f"enable='lt(mod(n,{cycle * field_multiplier}),{pulse_frames * field_multiplier})'"
                   ",drawbox=x=iw*.30:y=ih*.22:w=iw*.40:h=ih*.44:color=0x6c7787:t=2")
     args = [FFMPEG, "-hide_banner", "-loglevel", "warning", "-nostdin", "-y",
-            "-filter_complex_threads", "2", "-f", "lavfi", "-i", video]
-    graph = []
-    current = "0:v"
+            "-filter_complex_threads", "2", *input_args]
+    graph = [f"[0:v]{video}[base]"]
+    current = "base"
+    if preserve_plate:
+        graph += ["[base]split[original][graphics]", "[graphics]format=yuv444p10le[composite]"]
+        current = "composite"
     if s.pattern == "sweep":
         graph.append(f"color=c=white:s={max(4, w // 80 // 2 * 2)}x{h}:r={rate},format={work_format},setparams=colorspace=bt709[sweep]")
         x = "mod(t/2,1)"
@@ -318,6 +324,12 @@ def build_command(s, output, *, duration=None, preview=False):
         graph.append(f"[{current}][box]overlay=x='(W-w)*(1-abs(1-mod(t*{x_rate},2)))':"
                      f"y='(H-h)*(1-abs(1-mod(t*{y_rate},2)))':format={overlay_format}[moving]")
         current = "moving"
+    if preserve_plate:
+        # overlay composites in 10-bit. Keep native 12-bit plate codes wherever
+        # the composite differs by at most its depth-conversion rounding.
+        graph += [f"[{current}]format=yuv444p12le[graphics12]",
+                  "[original][graphics12]maskedthreshold=threshold=3[precision]"]
+        current = "precision"
     conversion = (f"colorspace=iall=bt709:irange=tv:space={matrix}:primaries={primaries}:"
                   f"trc={transfer}:range={s.video_range}:format={s.pixel_format.replace('le', '')}")
     # Sample chroma before weaving, so 4:2:0 filtering never mixes temporal fields.

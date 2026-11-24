@@ -31,6 +31,36 @@ class ReliabilityTests(unittest.TestCase):
         assets.register_upload(path, self.ident, "video", "fixture.mov")
         return self.root / (self.ident + ".media")
 
+    def test_native_twelve_bit_bar_codes_survive_compositing(self):
+        from signal_qualification import bars_case
+        result = bars_case(("1920x1080", "59.94p", 12, True), self.root)
+        self.assertEqual(result["errors"], [])
+        self.assertEqual(result["pre_encoder"]["max_patch_error_codes"], 0)
+        self.assertGreater(result["pre_encoder"]["ramp_distinct_interior_codes"], 1000)
+
+    def test_dnx_colour_agrees_in_frames_container_and_picture(self):
+        from signal_qualification import convert_case
+        result = convert_case(("dnxhr_lb", True), 13, self.root)
+        self.assertEqual(result["errors"], [])
+        self.assertEqual(result["scan"]["frame_colour"]["color_space"], {"bt709": 8})
+        self.assertEqual(result["measured"]["color_primaries"], "smpte170m")
+
+    def test_compact_proxy_preserves_moving_colour_patches(self):
+        from signal_qualification import convert_case
+        result = convert_case(("hevc_proxy10", False), 26, self.root)
+        self.assertEqual(result["errors"], [])
+        self.assertEqual(result["fixture"]["proxy_crf"], 35)
+
+    def test_missing_frame_time_is_detected_in_a_decodable_movie(self):
+        path = self.root / "gap.mkv"
+        subprocess.run([FFMPEG, "-v", "error", "-f", "lavfi", "-i", "color=s=128x72:r=25",
+                        "-vf", "setpts='(N+gte(N,4)*2)/(25*TB)'", "-fps_mode", "passthrough",
+                        "-frames:v", "8", "-c:v", "ffv1", str(path)], check=True)
+        report = verify(path, expected={"fps":"25"}, details=False)
+        self.assertEqual(report["scan"]["decoded_frames"], 8)
+        self.assertGreater(report["scan"]["cadence"]["max_error_ticks"], 1)
+        self.assertTrue(any("timestamps" in message for message in report["errors"]))
+
     def test_loop_schedule_closes_on_frames_samples_and_tone_cycles(self):
         for rate in RATES:
             for seconds in DURATIONS:

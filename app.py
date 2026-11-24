@@ -21,7 +21,7 @@ from engine import ROOT, Settings, build_command, capabilities, probe, render
 from assets import UPLOADS, asset, register_upload
 from transcode import ConvertSettings, PRESETS, plan, convert
 from delivery import generation_profiles
-from verification import verify, export_expectations, validate_export, check_contract
+from verification import verify, export_expectations, validate_export, check_contract, frame_measurements, frame_findings, primary
 from fractions import Fraction
 from matrix_runner import MatrixRunner
 
@@ -100,7 +100,14 @@ class Studio:
             fps = Fraction(conversion["fps"]) if conversion else settings.fps
             check = validate_export(partial, duration, fps, started, cancel)
             metadata = probe(partial)
-            errors, review = check_contract(metadata, export_expectations(job), check["frames_decoded"])
+            expected = export_expectations(job)
+            measurements = frame_measurements(partial, primary(metadata), fps, started, cancel)
+            count = check["frames_decoded"]
+            errors, review = check_contract(metadata, expected, count, measurements["scan_counts"])
+            frame_errors, frame_review = frame_findings(measurements, count, expected)
+            errors.extend(frame_errors)
+            review.extend(frame_review)
+            check.update(measurements)
             if errors:
                 raise RuntimeError("Export settings mismatch. " + " ".join(errors))
             check["review"] = review
@@ -225,7 +232,7 @@ class Handler(BaseHTTPRequestHandler):
             elif path == "/api/matrix":
                 if not isinstance(data, dict):
                     raise ValueError("Expected profile test settings.")
-                self.server.studio.matrix.start(data.get("resolution"), data.get("duration"))
+                self.server.studio.matrix.start(data.get("resolution", "all"), data.get("duration"), data.get("suite", "profiles"))
                 self.reply({"state":"running"}, 202)
             elif path == "/api/verify":
                 self.verify_video(data)

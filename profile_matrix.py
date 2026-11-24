@@ -9,6 +9,7 @@ import tempfile
 
 import assets
 from delivery import PROBE_PROFILES, generation_profiles
+from hd_bars import source_args
 from engine import DURATIONS, FFMPEG, RESOLUTIONS, Settings, render
 from transcode import ConvertSettings, PRESETS, convert
 from verification import verify
@@ -67,7 +68,9 @@ def run_matrix(root, frames, rasters, output, duration=None):
 
     for raster in rasters:
         ref = root / "bars.mkv"
-        subprocess.run([FFMPEG, "-v", "error", "-y", "-f", "lavfi", "-i", f"smptehdbars=size={raster}:rate={RATE},format=yuv444p,"
+        width, height = map(int, raster.split("x"))
+        inputs, signal = source_args(width, height, 8, RATE)
+        subprocess.run([FFMPEG, "-v", "error", "-y", *inputs, "-vf", signal + ","
                         "setparams=range=tv:colorspace=bt709:color_primaries=bt709:color_trc=bt709",
                         "-frames:v", str(main_frames), "-c:v", "ffv1", "-threads", "4", "-color_range", "tv",
                         "-colorspace", "bt709", "-color_trc", "bt709", "-color_primaries", "bt709", str(ref)], check=True)
