@@ -21,6 +21,9 @@ from engine import ROOT, Settings, build_command, capabilities, probe, render
 from assets import UPLOADS, asset, register_upload
 from transcode import ConvertSettings, PRESETS, plan, convert
 from delivery import generation_profiles
+from verification import verify, export_expectations, validate_export, check_contract
+from fractions import Fraction
+from matrix_runner import MatrixRunner
 
 OUTPUTS = ROOT / "outputs"
 STATIC = ROOT / "static"
@@ -36,11 +39,13 @@ class Studio:
         self.active = None
         self.cancel = threading.Event()
         self.preview_lock = threading.Lock()
+        self.verification_lock = threading.Lock()
+        self.matrix = MatrixRunner(OUTPUTS / "verification")
         self.health = capabilities()
         for path in sorted(OUTPUTS.glob("*.json"), reverse=True)[:100]:
             try:
                 job = json.loads(path.read_text())
-                if job.get("status") == "complete" and (OUTPUTS / job["filename"]).is_file():
+                if isinstance(job, dict) and job.get("status") == "complete" and (OUTPUTS / job["filename"]).is_file():
                     self.jobs[job["id"]] = job
             except (ValueError, KeyError, OSError):
                 continue
@@ -88,12 +93,22 @@ class Studio:
         try:
             runner = convert if job.get("kind") == "conversion" else render
             runner(settings, partial, progress=progress, started=started, cancel=cancel)
+            with self.lock:
+                job["phase"] = "checking"
+            conversion = job.get("conversion")
+            duration = conversion["duration"] if conversion else settings.duration
+            fps = Fraction(conversion["fps"]) if conversion else settings.fps
+            check = validate_export(partial, duration, fps, started, cancel)
             metadata = probe(partial)
+            errors, review = check_contract(metadata, export_expectations(job), check["frames_decoded"])
+            if errors:
+                raise RuntimeError("Export settings mismatch. " + " ".join(errors))
+            check["review"] = review
             with self.lock:
                 if cancel.is_set():
                     raise InterruptedError("Render cancelled.")
                 partial.rename(output)
-                job.update(status="complete", progress=1, bytes=output.stat().st_size, metadata=metadata)
+                job.update(status="complete", progress=1, bytes=output.stat().st_size, metadata=metadata, decode_check=check)
                 (OUTPUTS / (output.stem + ".json")).write_text(json.dumps(job, indent=2))
         except InterruptedError:
             with self.lock:
@@ -160,7 +175,12 @@ class Handler(BaseHTTPRequestHandler):
         if not self.local_request():
             return
         path = urlsplit(self.path).path
-        if path == "/api/status":
+        if path == "/health":
+            ready = self.server.studio.health["ready"]
+            self.reply({"ready": ready}, 200 if ready else 503)
+        elif path in ("/api/matrix", "/api/matrix/report"):
+            self.reply(self.server.studio.matrix.snapshot(full=path.endswith("/report")))
+        elif path == "/api/status":
             self.reply({"health": self.server.studio.health, "jobs": self.server.studio.snapshot(), "output_dir": str(OUTPUTS),
                         "generation_profiles": generation_profiles(),
                         "conversion_presets": {k: {"label":v[0], "container":v[4], "pixel_format":v[3]} for k,v in PRESETS.items()}})
@@ -172,7 +192,7 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_error(404)
         elif path.startswith("/download/"):
             self.download(path.rsplit("/", 1)[-1])
-        elif path in ("/", "/style.css", "/app.js", "/convert.js"):
+        elif path in ("/", "/style.css", "/app.js", "/convert.js", "/verify.js"):
             filename = STATIC / ("index.html" if path == "/" else path[1:])
             self.reply(filename.read_bytes(), content_type=mimetypes.guess_type(str(filename))[0] + "; charset=utf-8")
         else:
@@ -200,6 +220,11 @@ class Handler(BaseHTTPRequestHandler):
             elif path == "/api/conversion-plan":
                 result = plan(ConvertSettings.parse(data))
                 self.reply({k: v for k, v in result.items() if k not in ("source", "video")})
+            elif path == "/api/matrix":
+                self.server.studio.matrix.start(data.get("resolution") if isinstance(data, dict) else None)
+                self.reply({"state":"running"}, 202)
+            elif path == "/api/verify":
+                self.verify_video(data)
             elif path == "/api/preview":
                 settings = Settings.parse(data)
                 if not self.server.studio.preview_lock.acquire(blocking=False):
@@ -224,6 +249,30 @@ class Handler(BaseHTTPRequestHandler):
             self.reply({"error": str(exc)}, 400)
         except Exception as exc:
             self.reply({"error": str(exc)}, 500)
+
+    def verify_video(self, data):
+        if not isinstance(data, dict) or set(data) - {"job_id", "source_id", "reference_id"}:
+            raise ValueError("Invalid verification request.")
+        if bool(data.get("job_id")) == bool(data.get("source_id")):
+            raise ValueError("Select one export or upload.")
+        expected = None
+        if data.get("job_id"):
+            with self.server.studio.lock:
+                job = self.server.studio.jobs.get(data["job_id"])
+                if not job or job["status"] != "complete":
+                    raise ValueError("Select a completed export.")
+                target = OUTPUTS / job["filename"]
+                expected = export_expectations(job)
+        else:
+            target, _ = asset(data["source_id"], "video")
+        reference = asset(data["reference_id"], "video")[0] if data.get("reference_id") else None
+        if not self.server.studio.verification_lock.acquire(blocking=False):
+            self.reply({"error": "Another verification is running."}, 409)
+            return
+        try:
+            self.reply(verify(target, reference=reference, expected=expected))
+        finally:
+            self.server.studio.verification_lock.release()
 
     def upload(self, kind):
         if self.headers.get("Content-Type") != "application/octet-stream":
@@ -306,10 +355,11 @@ class Handler(BaseHTTPRequestHandler):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--port", type=int, default=9191)
+    parser.add_argument("--bind", choices=("127.0.0.1", "0.0.0.0"), default="127.0.0.1")
     args = parser.parse_args()
     studio = Studio()
     try:
-        server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
+        server = ThreadingHTTPServer((args.bind, args.port), Handler)
     except OSError as exc:
         raise SystemExit(f"Could not start on port {args.port}: {exc}")
     server.studio = studio
@@ -323,6 +373,7 @@ def main():
     finally:
         if studio.active:
             studio.stop(studio.active)
+        studio.matrix.close()
         server.server_close()
 
 

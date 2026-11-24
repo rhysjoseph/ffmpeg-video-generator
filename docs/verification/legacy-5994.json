@@ -1,0 +1,56 @@
+[
+  {
+    "source_bit_depth": 8,
+    "target": "ProRes 422 HQ",
+    "export_decode_check": {
+      "frames_decoded": 599,
+      "audio_decode": "all mapped tracks",
+      "decoder_errors": 0
+    },
+    "reference_comparison": {
+      "frames": 599,
+      "top_half": {
+        "mean_error": 0.011067708333333334,
+        "large_error_fraction": 0.00010223765432098765,
+        "peak": 48,
+        "worst_fraction_frame": 505
+      },
+      "bottom_half": {
+        "mean_error": 0.20609953703703704,
+        "large_error_fraction": 0.0017107124485596708,
+        "peak": 66,
+        "worst_fraction_frame": 404
+      },
+      "flat_channel_samples": 333396000,
+      "flat_large_errors": 0,
+      "first_flat_error": null
+    },
+    "errors": []
+  },
+  {
+    "source_bit_depth": 10,
+    "target": "ProRes 422 HQ",
+    "export_decode_check": {
+      "frames_decoded": 599,
+      "audio_decode": "all mapped tracks",
+      "decoder_errors": 0
+    },
+    "reference_comparison": {
+      "frames": 599,
+      "top_half": {
+        "mean_error": 0.0003993055555555556,
+        "large_error_fraction": 0.0,
+        "peak": 4
+      },
+      "bottom_half": {
+        "mean_error": 0.004247685185185185,
+        "large_error_fraction": 0.0,
+        "peak": 5
+      },
+      "flat_channel_samples": 333882000,
+      "flat_large_errors": 0,
+      "first_flat_error": null
+    },
+    "errors": []
+  }
+]

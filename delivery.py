@@ -21,3 +21,9 @@ def generation_profiles():
                   "pixel_format": pixel, "bit_depth": 10 if "10le" in pixel else 8,
                   "chroma": pixel[3:6]}
             for key, (label, encoder, _, pixel, container) in EDITING_PROFILES.items()}
+
+
+PROBE_PROFILES = {"prores_proxy": "Proxy", "prores_lt": "LT", "prores_422": "Standard",
+            "prores_hq": "HQ", "prores_4444": "4444", "prores_xq": "XQ",
+            "hevc_proxy": "Main", "hevc_proxy10": "Main 10", "dnxhd_hq": "DNXHD"}
+PROBE_PROFILES.update({key: key.replace("_", " ").upper() for key in EDITING_PROFILES if key.startswith("dnxhr")})

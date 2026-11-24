@@ -250,7 +250,8 @@ def build_command(s, output, *, duration=None, preview=False):
         video = f"{source}=s={w}x{h}:r={rate}"
     # Keep full chroma through compositing. Native FFmpeg bars have 8-bit levels;
     # higher-depth output preserves those sources and gains conversion precision.
-    video += f",format={work_format}"
+    # Fix bar geometry before negotiating the 8/10-bit compositing format.
+    video += f",format=yuv444p,format={work_format}"
     # Normalise source matrices into the BT.709 working space.
     if source in ("smptebars", "pal75bars", "pal100bars"):
         video += f",scale=in_color_matrix=bt601:out_color_matrix=bt709:in_range=tv:out_range=tv,format={work_format}"
@@ -342,8 +343,18 @@ def build_command(s, output, *, duration=None, preview=False):
         args += ["-x265-params", params]
         if s.container in ("mp4", "mov"):
             args += ["-tag:v", "hvc1"]
-    elif s.interlaced and s.encoder == "libx264":
-        args += ["-flags", "+ilme+ildct", "-x264-params", f"{s.field_order}=1"]
+    elif s.encoder == "libx264":
+        params = []
+        if s.container == "mov" and s.bit_depth == 10:
+            # Keep SPS/PPS at random-access points. Some MOV readers lose the
+            # out-of-band parameters on 10-bit AVC. avc3 signals in-band sets.
+            params.append("repeat-headers=1")
+            args += ["-tag:v", "avc3"]
+        if s.interlaced:
+            args += ["-flags", "+ilme+ildct"]
+            params.append(f"{s.field_order}=1")
+        if params:
+            args += ["-x264-params", ":".join(params)]
     if s.container == "mov":
         args += ["-c:a", "pcm_s24le"]
     else:

@@ -46,7 +46,7 @@ class ConvertSettings:
         s = cls(**values)
         for key, allowed in {"profile": PRESETS, "resolution": ("source", "custom", *RESOLUTIONS),
                              "rate": ("source", *[r for r in RATES if r.endswith("p")]),
-                             "fit": ("pad", "crop", "stretch"), "deinterlace": ("auto", "always"),
+                             "fit": ("pad", "crop", "stretch"), "deinterlace": ("auto", "always", "tff", "bff"),
                              "audio": ("keep", "mute"), "speed": ("ultrafast", "fast", "medium", "slow")}.items():
             value = getattr(s, key)
             if not isinstance(value, str) or value not in allowed:
@@ -70,12 +70,17 @@ def plan(s):
     s = ConvertSettings.parse(asdict(s))
     source, meta = asset(s.source_id, "video")
     video = meta["video"]
-    fps = Fraction(video.get("avg_frame_rate") or "0/1")
-    if fps <= 0:
-        fps = Fraction(video.get("r_frame_rate") or "0/1")
-    if s.rate != "source":
-        fps = Fraction(RATES[s.rate])
-    if not 1 <= fps <= 240:
+    source_rate = None
+    for key in ("avg_frame_rate", "r_frame_rate"):
+        try:
+            rate = Fraction(video.get(key, "0/1"))
+        except (ValueError, TypeError, ZeroDivisionError):
+            continue
+        if rate > 0:
+            source_rate = rate
+            break
+    fps = source_rate if s.rate == "source" else Fraction(RATES[s.rate])
+    if fps is None or not 1 <= fps <= 240:
         raise ValueError("Select an explicit frame rate; the source rate is not usable.")
     sar = Fraction(video.get("sample_aspect_ratio", "1:1").replace(":", "/")) if video.get("sample_aspect_ratio") not in (None, "N/A", "0:1") else Fraction(1)
     width, height = round(video["width"] * sar / 2) * 2, video["height"] // 2 * 2
@@ -107,24 +112,29 @@ def plan(s):
     if s.logo_id and hdr:
         raise ValueError("Logo overlays on HDR sources require tone mapping. Disable the conversion logo to preserve HDR without changing its transfer function.")
     return {"source": str(source), "name": meta["name"], "duration": duration, "width": width, "height": height,
-            "fps": str(fps), "label": label, "encoder": encoder, "profile": profile, "pix_fmt": pix,
-            "container": container, "bitrate": bitrate, "video": video, "hdr": hdr}
+            "fps": str(fps), "field_rate": source_rate is None or fps > source_rate, "label": label, "encoder": encoder, "profile": profile, "pix_fmt": pix,
+            "container": container, "bitrate": bitrate, "video": video, "hdr": hdr,
+            "audio_channels": [a["channels"] for a in meta["audio"]] if s.audio == "keep" else []}
 
 
 def build_conversion(s, output):
     p = plan(s)
     v, w, h = p["video"], p["width"], p["height"]
     args = [FFMPEG, "-hide_banner", "-loglevel", "warning", "-nostdin", "-y", "-filter_complex_threads", "2",
-            "-protocol_whitelist", "file,pipe", "-ss", str(s.start), "-i", p["source"]]
+            "-xerror", "-err_detect", "explode", "-protocol_whitelist", "file,pipe", "-ss", str(s.start), "-i", p["source"]]
     # Untagged HD material is treated as BT.709. Existing source colour tags are retained.
     matrix = v.get("color_space") if v.get("color_space") in ("bt709", "bt470bg", "smpte170m", "bt2020nc", "bt2020c", "smpte240m") else "bt709"
     primaries = v.get("color_primaries") if v.get("color_primaries") in ("bt709", "bt470bg", "smpte170m", "bt2020", "smpte432", "smpte431", "smpte240m") else "bt709"
     transfer = v.get("color_transfer") if v.get("color_transfer") in ("bt709", "smpte170m", "bt2020-10", "bt2020-12", "smpte2084", "arib-std-b67", "iec61966-2-1", "linear", "gamma22", "gamma28", "smpte240m") else "bt709"
     in_range = "pc" if v.get("color_range") == "pc" else "tv"
     # All converter presets deliver legal-range YUV. Source colour primaries/transfer stay intact.
-    filters = [f"bwdif=mode=send_frame:parity=auto:deint={'all' if s.deinterlace == 'always' else 'interlaced'}",
-               f"setparams=colorspace={matrix}:color_primaries={primaries}:color_trc={transfer}:range={in_range}",
-               "scale=w='max(2,trunc(iw*sar/2)*2)':h=ih,setsar=1"]
+    cadence = "send_field" if p["field_rate"] else "send_frame"
+    parity = s.deinterlace if s.deinterlace in ("tff", "bff") else "auto"
+    deint = "interlaced" if s.deinterlace == "auto" else "all"
+    filters = [f"bwdif=mode={cadence}:parity={parity}:deint={deint}",
+               f"setparams=colorspace={matrix}:color_primaries={primaries}:color_trc={transfer}:range={in_range}"]
+    # Keep square-pixel sources on a single scaling pass. Treat unspecified SAR as square.
+    filters.append("scale=w='max(2,round(iw*if(gt(sar,0),sar,1)/2)*2)':h=ih:flags=lanczos,setsar=1")
     mode = "decrease" if s.fit == "pad" else "increase"
     if s.fit == "stretch":
         filters.append(f"scale={w}:{h}:flags=lanczos:in_range={in_range}:out_range=tv")

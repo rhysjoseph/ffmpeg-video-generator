@@ -2,12 +2,12 @@ const conversionForm=$('convert-settings');
 let sourceAsset=null, conversionPlan=null, conversionValid=false, conversionUploading=false, conversionPosting=false, planSequence=0, planTimer=null, videoXHR=null;
 
 function switchTool(which){
-  for(const name of ['generator','converter']){const on=name===which;$(`${name}-tab`).setAttribute('aria-selected',String(on));$(`${name}-tab`).tabIndex=on?0:-1;$(`${name}-panel`).hidden=!on;}
-  if(which==='converter')schedulePlan();else update();
+  for(const name of ['generator','converter','verification']){const on=name===which;$(`${name}-tab`).setAttribute('aria-selected',String(on));$(`${name}-tab`).tabIndex=on?0:-1;$(`${name}-panel`).hidden=!on;}
+  if(which==='converter')schedulePlan();else if(which==='generator')update();else $('footer-format').textContent='FILE VERIFICATION';
 }
-for(const which of ['generator','converter']){
+for(const which of ['generator','converter','verification']){
   $(`${which}-tab`).addEventListener('click',()=>switchTool(which));
-  $(`${which}-tab`).addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){event.preventDefault();const next=event.key==='Home'?'generator':event.key==='End'?'converter':which==='generator'?'converter':'generator';switchTool(next);$(`${next}-tab`).focus();}});
+  $(`${which}-tab`).addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){event.preventDefault();const tabs=['generator','converter','verification'];const next=event.key==='Home'?tabs[0]:event.key==='End'?tabs[2]:tabs[(tabs.indexOf(which)+(event.key==='ArrowRight'?1:2))%3];switchTool(next);$(`${next}-tab`).focus();}});
 }
 
 function uploadFile(file,kind,onProgress,receiveXHR){
@@ -60,7 +60,7 @@ conversionForm.addEventListener('submit',async event=>{event.preventDefault();if
 $('cancel-convert').addEventListener('click',()=>$('cancel').click());
 window.updateConverterStatus=(data,active)=>{
   refreshConvertButton();$('convert-progress').hidden=!active;$('convert-button').firstChild.textContent=active?'Processing video… ':'Convert video ';
-    if(active){const percentage=Math.floor(active.progress*100);$('convert-progress-bar').value=percentage;$('convert-progress-text').textContent=(active.kind==='conversion'?'Converting':'Generating pattern')+' · '+percentage+'%';}
+    if(active){const percentage=Math.floor(active.progress*100);$('convert-progress-bar').value=percentage;$('convert-progress-text').textContent=active.phase==='checking'?'Verifying decoded export…':(active.kind==='conversion'?'Converting':'Generating pattern')+' · '+percentage+'%';}
     if(!$('converter-panel').hidden&&conversionValid&&conversionPlan)$('footer-format').textContent=conversionPlan.label+' · '+conversionPlan.container.toUpperCase();
 };
 schedulePlan();

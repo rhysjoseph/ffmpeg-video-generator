@@ -100,7 +100,8 @@ async function poll(){
     }
     const active=data.jobs.find(j=>j.status==='rendering');activeId=active?active.id:null;update();
     $('generate').firstChild.textContent=active?'Generating video… ':'Generate video ';$('render-progress').hidden=!active;
-    if(active){const percent=Math.floor(active.progress*100);$('progress').value=percent;$('progress-text').textContent=percent>=99?'Finalising file…':'Rendering · '+percent+'%';}
+    if(active){const percent=Math.floor(active.progress*100);$('progress').value=percent;$('progress-text').textContent=active.phase==='checking'?'Verifying decoded export…':percent>=99?'Finalising file…':'Rendering · '+percent+'%';}
+    window.updateVerificationExports?.(data.jobs);
     showJobs(data.jobs);$('output-path').textContent='Saved to '+data.output_dir;
     window.updateConverterStatus?.(data,active);
   }catch(exc){healthy=false;$('health').textContent='● SERVER OFFLINE';$('generate').disabled=true;error('Cannot reach the local server. Start it with Start.command. '+exc.message);}

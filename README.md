@@ -4,6 +4,18 @@ A local FFmpeg test-pattern generator and video converter for macOS, with a brow
 
 ![Test pattern generator showing the SMPTE colour bars preview and ProRes 422 HQ export summary](docs/screenshots/test-pattern-generator.jpg)
 
+## Docker Desktop
+
+Run this command from the project directory.
+
+```sh
+docker compose up -d --build --wait
+```
+
+Open [Pattern Studio](http://localhost:9191). Docker Desktop lists the application as **pattern-studio**. The image includes Python, Pillow, fonts, FFmpeg, ffprobe and MediaInfo CLI and runs as an unprivileged user. The published port is bound to localhost. Stop the native launcher first if it already occupies port 9191. Named volumes retain uploads, exports and the latest verification matrix across container restarts. Use `docker compose stop` and `docker compose start` to manage it.
+
+Open **Verify video** to inspect a file or completed export, compare it with a reference, or run the generator and converter across codec profiles and resolutions. See the [qualification guide](docs/verification/README.md) for the test matrix, thresholds, external QC tools and ImagePRO-4K baseline.
+
 ## Start
 
 Double-click **Start.command** in Finder, then open **http://localhost:9191**. Keep its Terminal window open while rendering. Press Control-C in that window to stop the server.
