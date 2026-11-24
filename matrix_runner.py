@@ -7,7 +7,7 @@ import subprocess
 import sys
 import threading
 
-from engine import RESOLUTIONS, ROOT
+from engine import DURATIONS, RESOLUTIONS, ROOT
 from verification import tool_versions
 from datetime import datetime, timezone
 
@@ -19,20 +19,28 @@ class MatrixRunner:
         self.lock = threading.Lock()
         self.process = None
 
-    def start(self, resolution):
+    def start(self, resolution, duration=None):
         if resolution != "all" and resolution not in RESOLUTIONS:
             raise ValueError("Choose a supported output resolution.")
+        if duration is not None and (type(duration) is not int or duration not in DURATIONS):
+            raise ValueError("Choose a supported test duration.")
         with self.lock:
             if self.process and self.process.poll() is None:
                 raise ValueError("A profile matrix is already running.")
             self.directory.mkdir(parents=True, exist_ok=True)
             environment = {"started_utc": datetime.now(timezone.utc).isoformat(), "tools": tool_versions(),
-                           "resolution": resolution, "frames_per_fixture": 8}
+                           "resolution": resolution}
+            if duration is None:
+                environment["frames_per_fixture"] = 8
+            else:
+                environment["duration_seconds"] = duration
             (self.directory / "environment.json").write_text(json.dumps(environment))
             self.report.unlink(missing_ok=True)
             args = [sys.executable, str(ROOT / "profile_matrix.py"), "--report", str(self.report)]
             if resolution != "all":
                 args += ["--resolution", resolution]
+            if duration is not None:
+                args += ["--duration", str(duration)]
             with (self.directory / "matrix.log").open("w") as log:
                 self.process = subprocess.Popen(args, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
 

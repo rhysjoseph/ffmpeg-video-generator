@@ -11,7 +11,7 @@ let logoAsset=null, uploadingLogo=false;
 let deliveryProfiles={}, profilesLoaded=false, customEncoding=null, selectedProfile='custom';
 const encodingFields=['bit_depth','chroma','video_range','codec','quality','preset'];
 function logoSettings(){return {logo_id:logoAsset?.id||'',logo_position:form.elements.logo_position.value,...Object.fromEntries(['logo_width','logo_margin','logo_opacity'].map(k=>[k,Number(form.elements[k].value)]))};}
-function settings(){const data=Object.fromEntries(new FormData(form));const output=form.elements.output_format.value;delete data.output_format;data.delivery_profile=deliveryProfiles[output]?output:'custom';data.container=deliveryProfiles[output]?.container||output;for(const key of encodingFields)data[key]=form.elements[key].value;data.duration=Number(data.duration);data.bit_depth=Number(data.bit_depth);data.timecode=form.elements.timecode.checked;data.freeze_box=form.elements.freeze_box.checked;data.field_order=form.elements.field_order.value;data.box_speed=form.elements.box_speed.value;return {...data,...logoSettings()};}
+function settings(){const data=Object.fromEntries(new FormData(form));const output=form.elements.output_format.value;delete data.output_format;data.delivery_profile=deliveryProfiles[output]?output:'custom';data.container=deliveryProfiles[output]?.container||output;for(const key of encodingFields)data[key]=form.elements[key].value;data.duration=Number(data.duration);data.bit_depth=Number(data.bit_depth);data.seamless_loop=form.elements.seamless_loop.checked;data.timecode=form.elements.timecode.checked&&!data.seamless_loop;data.freeze_box=form.elements.freeze_box.checked;data.field_order=form.elements.field_order.value;data.box_speed=form.elements.box_speed.value;return {...data,...logoSettings()};}
 function error(message){$('error').textContent=message||'';$('error').hidden=!message;}
 function update(){
   const profile=deliveryProfiles[form.elements.output_format.value];
@@ -29,6 +29,11 @@ function update(){
   form.elements.field_order.disabled=!interlaced;form.elements.box_speed.disabled=!s.freeze_box;
   $('pattern-note').textContent=notes[s.pattern].replace('Converted to BT.709.','Converted to the selected colour profile.');
   $('timecode-note').textContent=drop?'Drop-frame · starts at 00:00:00;00':'Non-drop · starts at 00:00:00:00 (DF does not apply at this rate)';
+  form.elements.timecode.disabled=s.seamless_loop;
+  if(s.seamless_loop)$('timecode-note').textContent='Hidden during seamless loops.';
+  const runtime=s.duration*(s.seamless_loop&&['23.98p','29.97p','59.94p','59.94i'].includes(s.rate)?1.001:1);
+  $('loop-note').textContent=s.seamless_loop?'Cycle length '+runtime.toFixed(3)+' seconds. '+(s.container==='mov'?'PCM audio aligns with the picture.':'For sample-accurate audio looping, select MOV with PCM.'):'Fit motion and tone to a complete cycle. Running timecode is hidden.';
+  if(s.seamless_loop && ['scroll','sweep'].includes(s.pattern))$('pattern-note').textContent=s.pattern==='scroll'?'The bars complete whole horizontal cycles per clip.':'The white bar sweeps out and back over whole cycles per clip.';
   $('rate-note').textContent=interlaced?(s.rate==='50i'?'25 frames / 50 fields per second.':'29.97 frames / 59.94 fields per second.')+' True interlace · top field first.':['23.98p','29.97p','59.94p'].includes(s.rate)?({'23.98p':'24000/1001','29.97p':'30000/1001','59.94p':'60000/1001'}[s.rate])+' progressive frames per second.':s.rate.slice(0,-1)+' progressive frames per second.';
   if(interlaced && s.resolution!=='1920x1080') $('rate-note').textContent+=' This resolution/interlace combination is nonstandard for broadcast delivery.';
   if(s.field_order==='bff')$('rate-note').textContent=$('rate-note').textContent.replace('top field first','bottom field first');
@@ -44,7 +49,7 @@ function update(){
   $('audio-note').textContent=codecName(s)+' video · '+(s.container==='mov'?'24-bit PCM audio':'AAC audio')+' · 48 kHz '+(s.audio==='four_pairs'?'in four separate stereo tracks (1–2, 3–4, 5–6, 7–8).':'stereo.')+(s.container!=='mov'?' AAC may slightly change decoded peak levels.':'');
   $('summary-pattern').textContent=names[s.pattern];$('summary-video').textContent=resolutions[s.resolution]+' / '+s.rate;
   $('summary-audio').textContent=(s.audio==='four_pairs'?'8 channels':'2 channels')+' / '+(s.level==='silence'?'Silence':s.level.replace('-','−')+' dBFS');
-  $('summary-delivery').textContent=(s.container==='ts'?'MPEG-TS':s.container.toUpperCase())+' / '+s.duration+' seconds';
+  $('summary-delivery').textContent=(s.container==='ts'?'MPEG-TS':s.container.toUpperCase())+' / '+Number(runtime.toFixed(3))+' seconds';
   $('summary-signal').textContent=s.bit_depth+'-bit / '+chromaName(s.chroma)+' / '+(s.video_range==='tv'?'Limited':'Full');
   $('summary-colour').textContent=colours[s.colour];
   $('summary-encoding').textContent=profile?codecName(s):codecName(s)+' / '+s.quality+' / '+s.preset;

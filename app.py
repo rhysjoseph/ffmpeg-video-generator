@@ -96,7 +96,7 @@ class Studio:
             with self.lock:
                 job["phase"] = "checking"
             conversion = job.get("conversion")
-            duration = conversion["duration"] if conversion else settings.duration
+            duration = conversion["duration"] if conversion else settings.runtime
             fps = Fraction(conversion["fps"]) if conversion else settings.fps
             check = validate_export(partial, duration, fps, started, cancel)
             metadata = probe(partial)
@@ -192,6 +192,8 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_error(404)
         elif path.startswith("/download/"):
             self.download(path.rsplit("/", 1)[-1])
+        elif path == "/favicon.ico":
+            self.reply((STATIC / "favicon.ico").read_bytes(), content_type="image/x-icon")
         elif path in ("/", "/style.css", "/app.js", "/convert.js", "/verify.js"):
             filename = STATIC / ("index.html" if path == "/" else path[1:])
             self.reply(filename.read_bytes(), content_type=mimetypes.guess_type(str(filename))[0] + "; charset=utf-8")
@@ -221,7 +223,9 @@ class Handler(BaseHTTPRequestHandler):
                 result = plan(ConvertSettings.parse(data))
                 self.reply({k: v for k, v in result.items() if k not in ("source", "video")})
             elif path == "/api/matrix":
-                self.server.studio.matrix.start(data.get("resolution") if isinstance(data, dict) else None)
+                if not isinstance(data, dict):
+                    raise ValueError("Expected profile test settings.")
+                self.server.studio.matrix.start(data.get("resolution"), data.get("duration"))
                 self.reply({"state":"running"}, 202)
             elif path == "/api/verify":
                 self.verify_video(data)
@@ -251,8 +255,11 @@ class Handler(BaseHTTPRequestHandler):
             self.reply({"error": str(exc)}, 500)
 
     def verify_video(self, data):
-        if not isinstance(data, dict) or set(data) - {"job_id", "source_id", "reference_id"}:
+        if not isinstance(data, dict) or set(data) - {"job_id", "source_id", "reference_id", "loop"}:
             raise ValueError("Invalid verification request.")
+        loop = data.get("loop", False)
+        if type(loop) is not bool:
+            raise ValueError("Invalid loop check setting.")
         if bool(data.get("job_id")) == bool(data.get("source_id")):
             raise ValueError("Select one export or upload.")
         expected = None
@@ -263,6 +270,7 @@ class Handler(BaseHTTPRequestHandler):
                     raise ValueError("Select a completed export.")
                 target = OUTPUTS / job["filename"]
                 expected = export_expectations(job)
+                loop = loop or job["settings"].get("seamless_loop", False)
         else:
             target, _ = asset(data["source_id"], "video")
         reference = asset(data["reference_id"], "video")[0] if data.get("reference_id") else None
@@ -270,7 +278,7 @@ class Handler(BaseHTTPRequestHandler):
             self.reply({"error": "Another verification is running."}, 409)
             return
         try:
-            self.reply(verify(target, reference=reference, expected=expected))
+            self.reply(verify(target, reference=reference, expected=expected, loop=loop))
         finally:
             self.server.studio.verification_lock.release()
 

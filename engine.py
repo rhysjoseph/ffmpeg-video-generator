@@ -8,7 +8,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import threading
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from functools import lru_cache
 from fractions import Fraction
 
@@ -25,6 +25,7 @@ PATTERNS = {
     "scroll": "Moving Colour Bars", "lipsync": "Lip Sync", "sweep": "Side Sweep",
 }
 RESOLUTIONS = {"3840x2160": "UHD 4K", "2560x1440": "QHD", "1920x1080": "Full HD", "1280x720": "HD"}
+DURATIONS = (10, 30, 60, 120)
 RATES = {
     "23.98p": "24000/1001", "24p": "24", "25p": "25", "29.97p": "30000/1001",
     "30p": "30", "50p": "50", "59.94p": "60000/1001", "60p": "60",
@@ -79,6 +80,7 @@ class Settings:
     logo_width: int = 15
     logo_margin: int = 3
     logo_opacity: int = 100
+    seamless_loop: bool = False
 
     @classmethod
     def parse(cls, values):
@@ -89,7 +91,7 @@ class Settings:
         s = cls(**values)
         for key, allowed in {
             "pattern": PATTERNS, "resolution": RESOLUTIONS, "rate": RATES,
-            "duration": (10, 30, 60, 120), "audio": ("stereo", "four_pairs"),
+            "duration": DURATIONS, "audio": ("stereo", "four_pairs"),
             "level": ("-20", "-18", "-12", "silence"), "container": ("mp4", "mov", "ts"),
             "delivery_profile": ("custom", *EDITING_PROFILES),
             "bit_depth": (8, 10, 12), "chroma": ("420", "422", "444"),
@@ -114,8 +116,10 @@ class Settings:
             raise ValueError("12-bit video requires HEVC. Choose Auto or H.265 / HEVC.")
         if s.interlaced and s.encoder == "libx265":
             raise ValueError("Interlaced output requires H.264 at 8 or 10 bits. Select a progressive rate for HEVC / 12-bit.")
-        if type(s.timecode) is not bool or type(s.freeze_box) is not bool:
+        if type(s.timecode) is not bool or type(s.freeze_box) is not bool or type(s.seamless_loop) is not bool:
             raise ValueError("Burn-in switches must be booleans.")
+        if s.seamless_loop and s.timecode:
+            s = replace(s, timecode=False)
         if not isinstance(s.label, str) or len(s.label) > 120 or any(ord(c) < 32 for c in s.label):
             raise ValueError("Label must be a single line of at most 120 characters.")
         validate_logo(s)
@@ -124,6 +128,12 @@ class Settings:
     @property
     def fps(self):
         return Fraction(RATES[self.rate])
+
+    @property
+    def runtime(self):
+        # Whole nominal seconds give whole frames, PCM samples and 1 kHz cycles,
+        # including at 24000/1001, 30000/1001 and 60000/1001.
+        return float(self.duration * round(self.fps) / self.fps) if self.seamless_loop else self.duration
 
     @property
     def interlaced(self):
@@ -231,7 +241,7 @@ def build_command(s, output, *, duration=None, preview=False):
     s = Settings.parse(asdict(s))
     if not preview and s.pixel_format not in encoder_formats(s.encoder):
         raise ValueError(f"This FFmpeg build cannot encode {s.pixel_format} with {s.encoder}. Choose another codec or install a compatible FFmpeg build.")
-    duration = s.duration if duration is None else duration
+    duration = s.runtime if duration is None else duration
     w, h = s.dimensions
     source_rate = s.fps * (2 if s.interlaced else 1)
     rate = str(source_rate)
@@ -258,7 +268,12 @@ def build_command(s, output, *, duration=None, preview=False):
     elif s.pattern in ("lipsync", "sweep"):
         video += f",scale=in_color_matrix=bt601:out_color_matrix=bt709:in_range=tv:out_range=tv,format={work_format}"
     video += ",setparams=range=tv:colorspace=bt709:color_primaries=bt709:color_trc=bt709"
-    if s.pattern == "scroll":
+    if s.seamless_loop and s.pattern == "scroll":
+        steps = max(1, round(duration * s.fps)) * (2 if s.interlaced else 1)
+        turns = max(1, round(duration / 8))
+        video += (f",split[left][right];[left][right]hstack,crop=w={w}:h={h}:"
+                  f"x='mod(round(n*{w}*{turns}/{steps}),{w})':y=0")
+    elif s.pattern == "scroll":
         video += f",scroll=horizontal={1 / (float(source_rate) * 8):.12f}"
     if s.pattern == "lipsync":
         field_multiplier = 2 if s.interlaced else 1
@@ -271,7 +286,10 @@ def build_command(s, output, *, duration=None, preview=False):
     current = "0:v"
     if s.pattern == "sweep":
         graph.append(f"color=c=white:s={max(4, w // 80 // 2 * 2)}x{h}:r={rate},format={work_format},setparams=colorspace=bt709[sweep]")
-        graph.append(f"[{current}][sweep]overlay=x='mod(t/2,1)*(W-w)':y=0:format={overlay_format}[swept]")
+        x = "mod(t/2,1)"
+        if s.seamless_loop:
+            x = f"1-abs(1-mod(t*2*{max(1, round(duration/4))}/{duration},2))"
+        graph.append(f"[{current}][sweep]overlay=x='({x})*(W-w)':y=0:format={overlay_format}[swept]")
         current = "swept"
     overlay = BurnIn(s) if s.timecode or s.label else None
     if overlay:
@@ -293,8 +311,12 @@ def build_command(s, output, *, duration=None, preview=False):
                      f"scale=in_color_matrix=bt601:out_color_matrix=bt709:in_range=tv:out_range=tv,"
                      f"drawbox=color=black:t=2,format={work_format},setparams=colorspace=bt709[box]")
         # Triangle waves reflect at all four boundaries without jumping or clipping.
-        graph.append(f"[{current}][box]overlay=x='(W-w)*(1-abs(1-mod(t*{speed}/3,2)))':"
-                     f"y='(H-h)*(1-abs(1-mod(t*{speed}/2,2)))':format={overlay_format}[moving]")
+        x_rate, y_rate = speed/3, speed/2
+        if s.seamless_loop:
+            x_rate = 2 * max(1, round(duration*x_rate/2)) / duration
+            y_rate = 2 * max(1, round(duration*y_rate/2)) / duration
+        graph.append(f"[{current}][box]overlay=x='(W-w)*(1-abs(1-mod(t*{x_rate},2)))':"
+                     f"y='(H-h)*(1-abs(1-mod(t*{y_rate},2)))':format={overlay_format}[moving]")
         current = "moving"
     conversion = (f"colorspace=iall=bt709:irange=tv:space={matrix}:primaries={primaries}:"
                   f"trc={transfer}:range={s.video_range}:format={s.pixel_format.replace('le', '')}")
@@ -372,7 +394,7 @@ def build_command(s, output, *, duration=None, preview=False):
 
 
 def render(s, output, *, duration=None, progress=None, started=None, cancel=None):
-    duration = s.duration if duration is None else duration
+    duration = s.runtime if duration is None else duration
     args, overlay = build_command(s, output, duration=duration)
     log_path = Path(output).with_suffix(".log")
     feeder_errors = []

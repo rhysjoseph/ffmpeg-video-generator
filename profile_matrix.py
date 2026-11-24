@@ -9,7 +9,7 @@ import tempfile
 
 import assets
 from delivery import PROBE_PROFILES, generation_profiles
-from engine import FFMPEG, RESOLUTIONS, Settings, render
+from engine import DURATIONS, FFMPEG, RESOLUTIONS, Settings, render
 from transcode import ConvertSettings, PRESETS, convert
 from verification import verify
 
@@ -26,10 +26,12 @@ def contract(codec, pixel, raster, fps, frames, container, profile):
             "audio_codecs": ["pcm_s24le" if container == "mov" else "aac"]*4}
 
 
-def run_matrix(root, frames, rasters, output):
+def run_matrix(root, frames, rasters, output, duration=None):
     cases = []
     partial = output.with_suffix(".partial.json")
     def record(case):
+        if duration is not None:
+            case["duration_seconds"] = duration
         cases.append(case)
         # Keep completed evidence if the long run is interrupted.
         partial.write_text(json.dumps(cases, indent=2) + "\n")
@@ -49,21 +51,25 @@ def run_matrix(root, frames, rasters, output):
             case = {"status": "failed", "errors": [str(exc)]}
         record({"mode": mode, "profile": key, "resolution": raster, **case})
 
-    base = Settings(audio="four_pairs", rate="59.94p", timecode=False, freeze_box=False)
+    base = Settings(audio="four_pairs", rate="59.94p", timecode=False, freeze_box=False,
+                    duration=duration or 10)
     sources = {}
     for rate, fps in (("59.94p", RATE), ("25p", Fraction(25))):
         source = root / "legacy.mov"
         render(replace(base, rate=rate, pattern="scroll", timecode=True, freeze_box=True,
-                       bit_depth=10, chroma="422", container="mov"), source, duration=float(frames/fps))
+                       bit_depth=10, chroma="422", container="mov"), source,
+               duration=None if duration else float(frames/fps))
         ident = ("a" if rate == "25p" else "b")*32
         assets.register_upload(source, ident, "video", "legacy-pattern.mov")
         sources[rate] = ident, assets.asset(ident, "video")[0]
+
+    main_frames = round(duration * RATE) if duration else frames
 
     for raster in rasters:
         ref = root / "bars.mkv"
         subprocess.run([FFMPEG, "-v", "error", "-y", "-f", "lavfi", "-i", f"smptehdbars=size={raster}:rate={RATE},format=yuv444p,"
                         "setparams=range=tv:colorspace=bt709:color_primaries=bt709:color_trc=bt709",
-                        "-frames:v", str(frames), "-c:v", "ffv1", "-threads", "4", "-color_range", "tv",
+                        "-frames:v", str(main_frames), "-c:v", "ffv1", "-threads", "4", "-color_range", "tv",
                         "-colorspace", "bt709", "-color_trc", "bt709", "-color_primaries", "bt709", str(ref)], check=True)
         variants = []
         for codec in ("h264", "hevc"):
@@ -86,8 +92,8 @@ def run_matrix(root, frames, rasters, output):
                 profile = {(8,"420"):"Main", (10,"420"):"Main 10"}.get((settings.bit_depth, settings.chroma), "Rext")
             else:
                 profile = PROBE_PROFILES[key]
-            expected = contract(codec, pixel, raster, RATE, frames, settings.container, profile)
-            exercise("generate", key, raster, lambda p: render(settings, p, duration=float(frames/RATE)),
+            expected = contract(codec, pixel, raster, RATE, main_frames, settings.container, profile)
+            exercise("generate", key, raster, lambda p: render(settings, p, duration=None if duration else float(frames/RATE)),
                      expected, ref, settings.container)
 
         for key, (_, encoder, _, pixel, container) in PRESETS.items():
@@ -99,15 +105,18 @@ def run_matrix(root, frames, rasters, output):
             ident, source = sources[rate]
             s = ConvertSettings(source_id=ident, profile=key, resolution=raster)
             codec = {"prores_ks":"prores","libx265":"hevc","dnxhd":"dnxhd"}[encoder]
+            fps = 25 if rate == "25p" else RATE
             expected = contract(codec, "yuv444p12le" if key in ("prores_4444","prores_xq") else pixel,
-                                raster, 25 if rate=="25p" else RATE, frames, container, PROBE_PROFILES[key])
+                                raster, fps, round(duration * fps) if duration else frames, container, PROBE_PROFILES[key])
             exercise("convert", key, raster, lambda p: convert(s, p), expected, source, container)
     return cases
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--frames", type=int, default=8)
+    length = parser.add_mutually_exclusive_group()
+    length.add_argument("--frames", type=int, default=8)
+    length.add_argument("--duration", type=int, choices=DURATIONS, help="Use the full dashboard duration in seconds.")
     parser.add_argument("--resolution", action="append", choices=RESOLUTIONS)
     parser.add_argument("--report", type=Path, required=True)
     args = parser.parse_args()
@@ -115,5 +124,5 @@ if __name__ == "__main__":
         parser.error("Use at least four frames per fixture.")
     with tempfile.TemporaryDirectory(prefix="profile-matrix-") as temp:
         assets.UPLOADS = Path(temp)  # The matrix runs in its own process.
-        results = run_matrix(Path(temp), args.frames, args.resolution or list(RESOLUTIONS), args.report)
+        results = run_matrix(Path(temp), args.frames, args.resolution or list(RESOLUTIONS), args.report, args.duration)
     raise SystemExit(int(any(c["status"] == "failed" for c in results)))

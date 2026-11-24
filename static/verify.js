@@ -29,6 +29,7 @@ $('qc-form').addEventListener('submit', async event => {
       return uploaded.id;
     };
     const request = job ? {job_id:job} : {source_id:await upload(file)};
+    request.loop = $('qc-loop').checked;
     if (reference) request.reference_id = await upload(reference);
     status.textContent = 'Decoding ' + (job ? qcExport.selectedOptions[0].text : file.name) + '…';
     const response = await fetch('/api/verify', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(request)});
@@ -43,6 +44,7 @@ $('qc-form').addEventListener('submit', async event => {
         stream.width ? stream.width + ' × ' + stream.height : null, stream.avg_frame_rate && stream.codec_type === 'video' ? stream.avg_frame_rate + ' fps' : null,
         stream.field_order, stream.channel_layout, stream.tags?.timecode].filter(Boolean).join(' · '));
     }
+    if (report.loop_boundary) lines.push('Loop join · mean RGB difference ' + report.loop_boundary.picture.seam_mean.toFixed(2) + ' codes · ' + report.loop_boundary.audio.length + ' audio tracks checked');
     if (report.comparison) lines.push(report.comparison.frames + ' frames compared against the reference.');
     $('qc-summary').textContent = lines.join('\n');
     const json = JSON.stringify(report, null, 2);
@@ -76,7 +78,7 @@ $('matrix-start').addEventListener('click', async () => {
   $('matrix-start').disabled = true;
   try {
     const response = await fetch('/api/matrix', {method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({resolution:$('matrix-resolution').value})});
+      body:JSON.stringify({resolution:$('matrix-resolution').value, duration:Number($('matrix-duration').value) || null})});
     const data = await response.json();
     if (!response.ok) throw new Error(data.error);
     await matrixStatus();

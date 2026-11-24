@@ -3,7 +3,7 @@ from dataclasses import replace
 from pathlib import Path
 
 from PIL import Image, ImageDraw
-from verification import verify, validate_export
+from verification import loop_boundary, verify, validate_export
 from threading import Event
 from fractions import Fraction
 import subprocess
@@ -12,7 +12,7 @@ import unittest
 from unittest.mock import patch
 
 import assets
-from engine import FFMPEG, Settings, render
+from engine import DURATIONS, FFMPEG, RATES, Settings, probe, render
 from transcode import ConvertSettings, convert
 
 
@@ -30,6 +30,51 @@ class ReliabilityTests(unittest.TestCase):
     def register(self, path):
         assets.register_upload(path, self.ident, "video", "fixture.mov")
         return self.root / (self.ident + ".media")
+
+    def test_loop_schedule_closes_on_frames_samples_and_tone_cycles(self):
+        for rate in RATES:
+            for seconds in DURATIONS:
+                s = Settings(duration=seconds, rate=rate, seamless_loop=True)
+                span = Fraction(str(s.runtime))
+                for frequency in (s.fps, 48000, 1000):
+                    self.assertEqual((span * frequency).denominator, 1, (rate, seconds))
+
+    def test_loop_mode_closes_moving_marker_and_sweep(self):
+        s = Settings(resolution="1280x720", rate="25p", pattern="sweep", container="mov")
+        for loop in (False, True):
+            target = self.root / f"motion-{loop}.mov"
+            render(replace(s, seamless_loop=loop, timecode=False), target)
+            video, audio = probe(target)["streams"][:2]
+            report, findings = loop_boundary(target, video, [audio], 250)
+            # A small bar at opposite sides can produce the same mean RGB error
+            # as a normal step. Compare actual positions for this known pattern.
+            raw = subprocess.check_output([FFMPEG, "-v", "error", "-i", str(target), "-map", "0:v:0",
+                "-vf", "select='eq(n,0)+eq(n,249)',scale=320:180", "-pix_fmt", "rgb24",
+                "-fps_mode", "passthrough", "-f", "rawvideo", "-"])
+            frame_size = 320 * 180 * 3
+            positions = []
+            for offset in (0, frame_size):
+                pixels = Image.frombytes("RGB", (320,180), raw[offset:offset+frame_size])
+                sweep_x = next(x for x in range(320) if min(pixels.getpixel((x,90))) > 170)
+                green = [(x,y) for y in range(180) for x in range(320)
+                         if (rgb := pixels.getpixel((x,y)))[1] > 140 and rgb[0] < 90]
+                positions.append((sweep_x,min(x for x,y in green),min(y for x,y in green)))
+            largest_step = max(abs(a-b) for a,b in zip(*positions))
+            self.assertEqual(largest_step < 16, loop, positions)
+            if loop:
+                self.assertFalse(findings, findings)
+                self.assertEqual(report["audio"][0]["offset_from_video_samples"], 0)
+
+    def test_loop_check_detects_a_visual_cut_and_audio_step(self):
+        path = self.root / "cut.mov"
+        subprocess.run([FFMPEG, "-v", "error", "-f", "lavfi", "-i",
+            "color=c=black:s=160x90:r=25:d=1,drawbox=c=white:t=fill:enable='gte(t,0.5)'",
+            "-f", "lavfi", "-i", "aevalsrc='if(lt(t,0.5),0.2,-0.2)':s=48000:d=1",
+            "-c:v", "libx264", "-c:a", "pcm_s24le", str(path)], check=True)
+        video, audio = probe(path)["streams"][:2]
+        _, findings = loop_boundary(path, video, [audio], 25)
+        self.assertTrue(any("picture transition" in f for f in findings))
+        self.assertTrue(any("large step" in f for f in findings))
 
     def frames(self, path, width, height):
         raw = subprocess.check_output([FFMPEG, "-v", "error", "-i", str(path), "-map", "0:v:0",

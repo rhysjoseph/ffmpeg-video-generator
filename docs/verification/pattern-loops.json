@@ -1,0 +1,249 @@
+[
+  {
+    "pattern": "smptehdbars",
+    "resolution": "1280x720",
+    "rate": "25p",
+    "container": "mov",
+    "cycle_seconds": 10.0,
+    "frames": 250,
+    "join": {
+      "picture": {
+        "seam_mean": 0.2260300925925926,
+        "adjacent_means": [
+          0.20019675925925925,
+          0.2084548611111111
+        ]
+      },
+      "audio": [
+        {
+          "stream": 1,
+          "samples_per_channel": 480000,
+          "rate": 48000,
+          "offset_from_video_samples": 0,
+          "join_step_s16": [
+            428,
+            428
+          ]
+        }
+      ]
+    },
+    "review": []
+  },
+  {
+    "pattern": "smptebars",
+    "resolution": "1280x720",
+    "rate": "23.98p",
+    "container": "mov",
+    "cycle_seconds": 10.01,
+    "frames": 240,
+    "join": {
+      "picture": {
+        "seam_mean": 0.27380208333333333,
+        "adjacent_means": [
+          0.2513136574074074,
+          0.25656828703703705
+        ]
+      },
+      "audio": [
+        {
+          "stream": 1,
+          "samples_per_channel": 480480,
+          "rate": 48000,
+          "offset_from_video_samples": 0,
+          "join_step_s16": [
+            428,
+            428
+          ]
+        }
+      ]
+    },
+    "review": []
+  },
+  {
+    "pattern": "pal75bars",
+    "resolution": "1280x720",
+    "rate": "24p",
+    "container": "mov",
+    "cycle_seconds": 10.0,
+    "frames": 240,
+    "join": {
+      "picture": {
+        "seam_mean": 0.3234490740740741,
+        "adjacent_means": [
+          0.32244791666666667,
+          0.3422280092592593
+        ]
+      },
+      "audio": [
+        {
+          "stream": 1,
+          "samples_per_channel": 480000,
+          "rate": 48000,
+          "offset_from_video_samples": 0,
+          "join_step_s16": [
+            428,
+            428
+          ]
+        }
+      ]
+    },
+    "review": []
+  },
+  {
+    "pattern": "pal100bars",
+    "resolution": "1280x720",
+    "rate": "30p",
+    "container": "mov",
+    "cycle_seconds": 10.0,
+    "frames": 300,
+    "join": {
+      "picture": {
+        "seam_mean": 0.28563078703703704,
+        "adjacent_means": [
+          0.28583333333333333,
+          0.2980439814814815
+        ]
+      },
+      "audio": [
+        {
+          "stream": 1,
+          "samples_per_channel": 480000,
+          "rate": 48000,
+          "offset_from_video_samples": 0,
+          "join_step_s16": [
+            428,
+            428
+          ]
+        }
+      ]
+    },
+    "review": []
+  },
+  {
+    "pattern": "lipsync",
+    "resolution": "1280x720",
+    "rate": "29.97p",
+    "container": "mov",
+    "cycle_seconds": 10.01,
+    "frames": 300,
+    "join": {
+      "picture": {
+        "seam_mean": 40.55555555555556,
+        "adjacent_means": [
+          0.2465335648148148,
+          0.25708333333333333
+        ]
+      },
+      "audio": [
+        {
+          "stream": 1,
+          "samples_per_channel": 480480,
+          "rate": 48000,
+          "offset_from_video_samples": 0,
+          "join_step_s16": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "review": [
+      "Loop picture transition exceeds neighbouring motion. Check for a cut or an intentional flash."
+    ]
+  },
+  {
+    "pattern": "sweep",
+    "resolution": "1920x1080",
+    "rate": "59.94i",
+    "container": "mov",
+    "cycle_seconds": 10.01,
+    "frames": 300,
+    "join": {
+      "picture": {
+        "seam_mean": 2.917204861111111,
+        "adjacent_means": [
+          5.168472222222222,
+          5.223697916666667
+        ]
+      },
+      "audio": [
+        {
+          "stream": 1,
+          "samples_per_channel": 480480,
+          "rate": 48000,
+          "offset_from_video_samples": 0,
+          "join_step_s16": [
+            428,
+            428
+          ]
+        }
+      ]
+    },
+    "review": []
+  },
+  {
+    "pattern": "scroll",
+    "resolution": "1280x720",
+    "rate": "59.94p",
+    "container": "mp4",
+    "cycle_seconds": 10.01,
+    "frames": 600,
+    "join": {
+      "picture": {
+        "seam_mean": 1.4274131944444444,
+        "adjacent_means": [
+          1.4399189814814815,
+          1.441429398148148
+        ]
+      },
+      "audio": [
+        {
+          "stream": 1,
+          "samples_per_channel": 480480,
+          "rate": 48000,
+          "offset_from_video_samples": 0,
+          "join_step_s16": [
+            444,
+            444
+          ]
+        }
+      ]
+    },
+    "review": [
+      "Track 1 uses AAC. Gapless playback depends on handling encoder priming and padding."
+    ]
+  },
+  {
+    "pattern": "scroll",
+    "resolution": "1280x720",
+    "rate": "59.94p",
+    "container": "ts",
+    "cycle_seconds": 10.01,
+    "frames": 600,
+    "join": {
+      "picture": {
+        "seam_mean": 1.4274131944444444,
+        "adjacent_means": [
+          1.4399189814814815,
+          1.441429398148148
+        ]
+      },
+      "audio": [
+        {
+          "stream": 1,
+          "samples_per_channel": 482304,
+          "rate": 48000,
+          "offset_from_video_samples": 1824,
+          "join_step_s16": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "review": [
+      "Audio track 1 differs from the picture by 1824 decoded samples.",
+      "Track 1 uses AAC. Gapless playback depends on handling encoder priming and padding."
+    ]
+  }
+]

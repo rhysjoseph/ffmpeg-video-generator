@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Pattern Studio · Local video generator</title>
+  <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64">
   <link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script><script src="/convert.js" defer></script><script src="/verify.js" defer></script>
 </head>
 <body>
@@ -28,6 +29,7 @@
         <section class="panel"><div class="section-title"><span class="step">02</span><h2>Video format</h2></div>
           <div class="fields"><label>Resolution<select name="resolution"><option value="3840x2160">3840 × 2160 · UHD 4K</option><option value="2560x1440">2560 × 1440 · QHD</option><option value="1920x1080" selected>1920 × 1080 · Full HD</option><option value="1280x720">1280 × 720 · HD</option></select></label><label>Frame rate<select name="rate"><optgroup label="Progressive"><option>23.98p</option><option>24p</option><option selected>25p</option><option>29.97p</option><option>30p</option><option>50p</option><option>59.94p</option><option>60p</option></optgroup><optgroup label="Interlaced"><option>50i</option><option>59.94i</option></optgroup></select></label></div>
           <fieldset><legend>Duration</legend><div class="segments"><label><input type="radio" name="duration" value="10" checked><span>10 s</span></label><label><input type="radio" name="duration" value="30"><span>30 s</span></label><label><input type="radio" name="duration" value="60"><span>60 s</span></label><label><input type="radio" name="duration" value="120"><span>120 s</span></label></div></fieldset>
+          <label class="toggle-row"><span><strong>Seamless loop</strong><small id="loop-note">Fit motion and tone to a complete cycle. Running timecode is hidden.</small></span><input type="checkbox" name="seamless_loop"><span class="switch"></span></label>
           <p class="note" id="rate-note">25 progressive frames per second.</p>
           <div class="fields extra-fields"><label>Field order<select name="field_order" disabled><option value="tff">Top field first</option><option value="bff">Bottom field first</option></select></label></div>
         </section>
@@ -79,6 +81,7 @@
         <label class="extra-label" id="qc-file-label">Local video<input type="file" id="qc-file"></label>
         <label class="extra-label">Reference video (optional)<input type="file" id="qc-reference"></label>
         <p class="note">Use an aligned SDR reference with the same frame timing and display aspect ratio. The comparison measures both halves of each frame. Choose a completed export to also check its saved settings.</p>
+        <label class="toggle-row"><span><strong>Check loop boundary</strong><small>Compare the joining pictures and audio samples.</small></span><input type="checkbox" id="qc-loop"><span class="switch"></span></label>
         <button class="primary extra-label" id="qc-run">Verify video</button>
       </form>
       <p id="qc-status" role="status" class="note"></p>
@@ -86,8 +89,9 @@
       <details id="qc-details" hidden><summary>Technical report</summary><pre class="conversion-plan" id="qc-json"></pre><a id="qc-download" download="verification.json">Download JSON</a></details>
       <details class="extra-label" id="matrix-controls">
         <summary>Test codec profiles and resolutions</summary>
-        <p class="note">Render and convert short fixtures, then compare every decoded frame with its reference. A full run includes UHD and can take several minutes. Starting a run replaces the previous matrix report.</p>
+        <p class="note">Compare every decoded frame with its reference. Full-length profile runs can take hours, especially in UHD. Starting a run replaces the previous matrix report.</p>
         <label class="extra-label">Test resolution<select id="matrix-resolution"><option value="all">All four resolutions</option><option>1280x720</option><option>1920x1080</option><option>2560x1440</option><option>3840x2160</option></select></label>
+        <label class="extra-label">Test length<select id="matrix-duration"><option value="">Quick check · 8 frames</option><option value="10">10 seconds</option><option value="30">30 seconds</option><option value="60">60 seconds</option><option value="120">120 seconds</option></select></label>
         <button type="button" class="primary extra-label" id="matrix-start">Run profile tests</button>
         <p class="note" id="matrix-status" role="status"></p>
         <a id="matrix-report" href="/api/matrix/report" download="profile-matrix.json" hidden>Download profile results</a>

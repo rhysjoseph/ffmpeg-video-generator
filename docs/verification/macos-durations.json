@@ -1,0 +1,252 @@
+{
+  "tools": {
+    "ffmpeg": "ffmpeg version 9.0.2 Copyright (c) 2000-2026 the FFmpeg developers",
+    "ffprobe": "ffprobe version 9.0.2 Copyright (c) 2007-2026 the FFmpeg developers"
+  },
+  "cases": [
+    {
+      "seconds": 10,
+      "status": "checks passed",
+      "errors": [],
+      "review": [],
+      "expected_frames": 599,
+      "generated": {
+        "frames_decoded": 599,
+        "audio_decode": "all mapped tracks",
+        "decoder_errors": 0
+      },
+      "audio_seconds": {
+        "generated": [
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "converted": [
+          9.9933125,
+          9.9933125,
+          9.9933125,
+          9.9933125
+        ]
+      },
+      "converted": {
+        "decoded_frames": 599,
+        "scan_counts": {
+          "progressive": 599,
+          "tff": 0,
+          "bff": 0
+        },
+        "consecutive_identical": 0,
+        "near_freezes": 0,
+        "first_freeze_starts_seconds": [],
+        "sample_extrema": {
+          "YMIN": 4.0,
+          "YMAX": 1019.0,
+          "UMIN": 4.0,
+          "UMAX": 1014.0,
+          "VMIN": 4.0,
+          "VMAX": 1019.0
+        }
+      },
+      "comparison": {
+        "frames": 599,
+        "top_half": {
+          "mean_error": 0.00032407407407407406,
+          "large_error_fraction": 0.0,
+          "peak": 4
+        },
+        "bottom_half": {
+          "mean_error": 0.002918917181069959,
+          "large_error_fraction": 0.0,
+          "peak": 6
+        },
+        "flat_channel_samples": 340929000,
+        "flat_large_errors": 0,
+        "first_flat_error": null
+      }
+    },
+    {
+      "seconds": 30,
+      "status": "checks passed",
+      "errors": [],
+      "review": [],
+      "expected_frames": 1798,
+      "generated": {
+        "frames_decoded": 1798,
+        "audio_decode": "all mapped tracks",
+        "decoder_errors": 0
+      },
+      "audio_seconds": {
+        "generated": [
+          30.0,
+          30.0,
+          30.0,
+          30.0
+        ],
+        "converted": [
+          29.996625,
+          29.996625,
+          29.996625,
+          29.996625
+        ]
+      },
+      "converted": {
+        "decoded_frames": 1798,
+        "scan_counts": {
+          "progressive": 1798,
+          "tff": 0,
+          "bff": 0
+        },
+        "consecutive_identical": 0,
+        "near_freezes": 0,
+        "first_freeze_starts_seconds": [],
+        "sample_extrema": {
+          "YMIN": 4.0,
+          "YMAX": 1019.0,
+          "UMIN": 4.0,
+          "UMAX": 1014.0,
+          "VMIN": 4.0,
+          "VMAX": 1019.0
+        }
+      },
+      "comparison": {
+        "frames": 1798,
+        "top_half": {
+          "mean_error": 0.0008246527777777778,
+          "large_error_fraction": 0.0,
+          "peak": 12
+        },
+        "bottom_half": {
+          "mean_error": 0.002918917181069959,
+          "large_error_fraction": 0.0,
+          "peak": 6
+        },
+        "flat_channel_samples": 1027015200,
+        "flat_large_errors": 0,
+        "first_flat_error": null
+      }
+    },
+    {
+      "seconds": 60,
+      "status": "checks passed",
+      "errors": [],
+      "review": [],
+      "expected_frames": 3596,
+      "generated": {
+        "frames_decoded": 3596,
+        "audio_decode": "all mapped tracks",
+        "decoder_errors": 0
+      },
+      "audio_seconds": {
+        "generated": [
+          60.0,
+          60.0,
+          60.0,
+          60.0
+        ],
+        "converted": [
+          59.993270833333334,
+          59.993270833333334,
+          59.993270833333334,
+          59.993270833333334
+        ]
+      },
+      "converted": {
+        "decoded_frames": 3596,
+        "scan_counts": {
+          "progressive": 3596,
+          "tff": 0,
+          "bff": 0
+        },
+        "consecutive_identical": 0,
+        "near_freezes": 0,
+        "first_freeze_starts_seconds": [],
+        "sample_extrema": {
+          "YMIN": 4.0,
+          "YMAX": 1019.0,
+          "UMIN": 4.0,
+          "UMAX": 1014.0,
+          "VMIN": 4.0,
+          "VMAX": 1019.0
+        }
+      },
+      "comparison": {
+        "frames": 3596,
+        "top_half": {
+          "mean_error": 0.0010124099794238683,
+          "large_error_fraction": 0.0,
+          "peak": 13
+        },
+        "bottom_half": {
+          "mean_error": 0.002918917181069959,
+          "large_error_fraction": 0.0,
+          "peak": 7
+        },
+        "flat_channel_samples": 2054613600,
+        "flat_large_errors": 0,
+        "first_flat_error": null
+      }
+    },
+    {
+      "seconds": 120,
+      "status": "checks passed",
+      "errors": [],
+      "review": [],
+      "expected_frames": 7193,
+      "generated": {
+        "frames_decoded": 7193,
+        "audio_decode": "all mapped tracks",
+        "decoder_errors": 0
+      },
+      "audio_seconds": {
+        "generated": [
+          120.0,
+          120.0,
+          120.0,
+          120.0
+        ],
+        "converted": [
+          120.0,
+          120.0,
+          120.0,
+          120.0
+        ]
+      },
+      "converted": {
+        "decoded_frames": 7193,
+        "scan_counts": {
+          "progressive": 7193,
+          "tff": 0,
+          "bff": 0
+        },
+        "consecutive_identical": 0,
+        "near_freezes": 0,
+        "first_freeze_starts_seconds": [],
+        "sample_extrema": {
+          "YMIN": 4.0,
+          "YMAX": 1019.0,
+          "UMIN": 4.0,
+          "UMAX": 1014.0,
+          "VMIN": 4.0,
+          "VMAX": 1019.0
+        }
+      },
+      "comparison": {
+        "frames": 7193,
+        "top_half": {
+          "mean_error": 0.0020109953703703705,
+          "large_error_fraction": 0.0,
+          "peak": 26
+        },
+        "bottom_half": {
+          "mean_error": 0.002918917181069959,
+          "large_error_fraction": 0.0,
+          "peak": 7
+        },
+        "flat_channel_samples": 4109518800,
+        "flat_large_errors": 0,
+        "first_flat_error": null
+      }
+    }
+  ]
+}

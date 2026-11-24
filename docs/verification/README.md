@@ -19,9 +19,58 @@ Three defects were reproducible during qualification.
 - Negotiating 10-bit compositing changed bar boundaries relative to the 8-bit source. Selecting a common source sampling format before compositing aligned the bars across profiles.
 - A generated 25p 10-bit H.264 MOV fixture failed strict decode on three consecutive Linux runs. Signalling AVC3 and repeating parameter sets for 10-bit AVC in MOV preserved decodability in the fixture. This guard also covers future exports through the dashboard. Decoder success alone cannot detect a validly encoded wrong picture.
 
+## Full-length exports and the SDI bench
+
+The duration suite generates moving 1920×1080 H.264 10-bit 4:2:2 MOV at 60000/1001 fps, converts it to ProRes 422 HQ and compares every converted picture against its source. Both files carry four stereo PCM tracks. Each duration ran through the macOS and Docker builds. Neither build found decoder errors, repeated neighbouring frames or large sampled flat-patch errors in these moving-picture conversions. The regression suite passed 35 tests on each host. Docker flagged the unreported ProRes colour-range field at all four lengths. [macOS results](macos-durations.json) · [Docker results](docker-durations.json)
+
+| Dashboard length | Normal export frames | Seamless loop frames | Loop duration at 59.94p | UltraStudio → PRISM |
+| --- | ---: | ---: | ---: | --- |
+| 10 s | 599 | 600 | 10.010 s | [10-second capture](sdi-10s.jpg) |
+| 30 s | 1,798 | 1,800 | 30.030 s | [30-second capture](sdi-30s.jpg) |
+| 60 s | 3,596 | 3,600 | 60.060 s | [60-second capture](sdi-60s.jpg) |
+| 120 s | 7,193 | 7,200 | 120.120 s | [120-second capture](sdi-120s.jpg) |
+
+The four SDI runs used separately labelled H.264-to-ProRes conversions at the ordinary durations. Each played to end of stream. In all four midpoint measurements PRISM reported 1080p59.94, SDR Rec.709, YCbCr 4:2:2 10-bit and SMPTE 425 Level A with green CRC status. Eight embedded channels metered approximately −20 dBFS. The captures are spot measurements. PRISM reported **Video/Ref Drifting** against its locked PTP reference. Desktop Video Setup showed no external reference at the UltraStudio. Facility genlock and a frame-by-frame capture of the physical output remain open qualifications.
+
+**Device discovery.** macOS enumerated the UltraStudio HD Mini on Thunderbolt 3 at 40 Gb/s while Desktop Video 16.5 was waiting for extension approval. After the Blackmagic Network, Camera and BlackmagicIO extensions became active, Desktop Video Setup and the vendor's device list recognised the unit and the latter reported current firmware. Desktop Video initially selected dual-link output, and the single-cable receiver showed 1080i59.94. Selecting **Single Link** and **SMPTE Level A** delivered progressive 59.94 on SDI 1. The PRISM layout uses Video Session, Picture, Waveform and Audio. Its previous layout used IP Status, Picture, IP Session and Timing. [Blackmagic Desktop Video manual](https://documents.blackmagicdesign.com/UserManuals/DesktopVideoManual.pdf)
+
+**Audio routing.** The generated file measured −20 dBFS on each of eight decoded channels. In this setup, Media Express sent tone on channels 1–2 with both four stereo tracks and a single interleaved eight-channel PCM track. Selecting channels 1–8 in the Media Express UI did not resolve it. The native GStreamer 1.28 DeckLink output delivered all eight from the interleaved version over the same cable. Identical tones establish level and presence. Identifying channel swaps would require distinct tones or identifiers. [Four-pair Media Express result](prism-1080p5994.jpg) · [Eight-channel Media Express control](prism-8ch.jpg) · [Direct DeckLink result](prism-decklink.jpg)
+
+### Seamless loops
+
+Select **Seamless loop** in the generator and choose a **MOV** output for PCM audio. Motion completes whole cycles over the selected duration. The running timecode is hidden so its displayed value cannot jump backwards at the join. At fractional rates the generator uses an integral number of nominal seconds of frames. This keeps the specified raster timing, 48 kHz sample rate and 1 kHz test tone exact. The dashboard shows the resulting wall-clock duration. The generated file repeats when the player loops it. A full-length conversion that retains timing can preserve the seam. Trims, frame-rate changes and arbitrary source cuts need a fresh check.
+
+In **Verify video**, select **Check loop boundary** for an uploaded file or conversion. Saved loop-mode generator exports receive this check automatically when verified. The report compares the last-to-first picture difference with adjacent steps after scaling to 320×180 RGB. For each audio channel it measures the decoded sample step across the join and compares audio length with picture duration. An intentional lip-sync flash can trigger picture review. A small object jumping position can evade a whole-frame average. A regression test separately tracks marker and sweep positions. MP4 and TS exports use AAC, for which audible joins depend on how the player handles priming and padding. A separate ten-second sweep exercised all seven generator patterns. The intentional lip-sync flash triggered picture review, interlaced sweep motion passed, and the MPEG-TS/AAC case decoded with 1,824 extra audio samples (38 ms). The MP4/AAC case had aligned lengths in the tested decoder. [Pattern and container measurements](pattern-loops.json)
+
+All four loop-mode durations passed the macOS H.264-to-ProRes comparison with zero repeated neighbouring pictures, zero large differences in sampled flat patches and zero audio-length error on every track. The deployed Docker dashboard also generated and verified a 23.98p H.264 MOV loop at the 10-second setting. It measured 240 pictures, 480,480 stereo PCM samples per channel and zero sample offset in both start and duration.
+
+The hardware loop test repeated the same nominal 10-second ProRes MOV three times through one continuously open DeckLink output. The byte stream fed to the player contained 1,800 decoded pictures with exactly 1,001 ticks per step on a 60,000 Hz clock. Each 600-frame block had the same sequence of decoded hashes. All three eight-channel PCM blocks were byte-identical, with 480,480 samples per channel per block and continuous packet timestamps. The PRISM showed progressive video, green CRC status and eight active channels around the two joins. [Loop measurements](macos-loops.json) · [Three-cycle playout measurements](three-cycle-playout.json) · [PRISM after the second join](sdi-loop.jpg)
+
+Run the full-length checks with:
+
+```sh
+python3 duration_tests.py --report durations.json
+python3 duration_tests.py --loop --report loops.json --keep-dir outputs/loop-durations
+```
+
+For native hardware playback of a retained four-pair loop, interleave its PCM tracks and use the explicit 10-bit and eight-channel DeckLink sinks. The example plays three cycles and requires exclusive access to the selected output. Device 0 was the only Blackmagic video device on the qualification host. The Docker image handles file generation and verification. [GStreamer DeckLink audio sink](https://gstreamer.freedesktop.org/documentation/decklink/decklinkaudiosink.html) · [GStreamer DeckLink video sink](https://gstreamer.freedesktop.org/documentation/decklink/decklinkvideosink.html)
+
+```sh
+gstbin=/Library/Frameworks/GStreamer.framework/Versions/1.0/bin
+ffmpeg -v error -stream_loop 2 -i outputs/loop-durations/prores-hq-10s.mov \
+  -filter_complex '[0:a:0][0:a:1][0:a:2][0:a:3]join=inputs=4:channel_layout=7.1:map=0.0-FL|0.1-FR|1.0-FC|1.1-LFE|2.0-BL|2.1-BR|3.0-SL|3.1-SR[a]' \
+  -map 0:V:0 -map '[a]' -c:v copy -c:a pcm_s24le -video_track_timescale 60000 \
+  -movflags +empty_moov+default_base_moof+frag_keyframe -frag_duration 250000 -f mov pipe:1 | \
+  "$gstbin/gst-launch-1.0" fdsrc fd=0 ! qtdemux name=d \
+    d.video_0 ! queue ! avdec_prores ! videoconvert ! video/x-raw,format=v210 ! \
+    decklinkvideosink device-number=0 mode=1080p5994 video-format=10bit-yuv mapping-format=level-a async=false \
+    d.audio_0 ! queue ! audioconvert ! audio/x-raw,format=S32LE,channels=8,rate=48000 ! \
+    decklinkaudiosink device-number=0 async=false
+```
+
 ## Reproduce the profile sweep
 
-Open **Verify video → Test codec profiles and resolutions**, choose one resolution or all four, then select **Run profile tests**. Each run replaces the latest matrix report. Download the previous report first if you want to keep a history. The fixtures run in a separate temporary directory. Only the report and run log persist in the outputs volume.
+Open **Verify video → Test codec profiles and resolutions**, choose a resolution and test length, then select **Run profile tests**. Each run replaces the latest matrix report. Download the previous report first if you want to keep a history. The fixtures run in a separate temporary directory. Only the report and run log persist in the outputs volume.
 
 The equivalent local command is:
 
@@ -29,7 +78,7 @@ The equivalent local command is:
 python3 profile_matrix.py --report matrix.json
 ```
 
-Use `--resolution 1920x1080` to narrow a run. The default is eight frames per fixture. Increase `--frames` to exercise longer GOPs and durations. The command returns a nonzero exit status for failed cases. A working copy of the report is updated after every case. Both suites can also run inside the deployed container.
+Use `--resolution 1920x1080` to narrow a run. The default is eight frames per fixture. Use `--duration 10`, `30`, `60` or `120` for real-time lengths across all selected profiles, or use `--frames` to specify a frame count. The command returns a nonzero exit status for failed cases. A working copy of the report is updated after every case. Both suites can also run inside the deployed container.
 
 ```sh
 docker compose exec studio python3 -m unittest -v

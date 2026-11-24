@@ -1,12 +1,14 @@
 """File QC for the dashboard and the profile matrix. All paths belong to the caller."""
 import argparse
 from contextlib import ExitStack
+from array import array
 from fractions import Fraction
 from functools import lru_cache
 import json
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tempfile
 import threading
 
@@ -236,6 +238,10 @@ def export_expectations(job):
         expected = {"audio_tracks": s.pairs, "audio_channels": [2]*s.pairs,
                     "audio_codecs": ["pcm_s24le" if container == "mov" else "aac"]*s.pairs,
                     "color_space": s.colour_tags[0], "color_range": s.video_range}
+        if s.seamless_loop:
+            expected["frames"] = s.duration * round(s.fps)
+            if container == "mov":
+                expected["pcm_samples_per_track"] = [round(s.runtime * 48000)] * s.pairs
         if s.interlaced:
             expected["decoded_dominance"] = s.field_order
         else:
@@ -257,6 +263,11 @@ def check_contract(info, expected, count, scan_counts=None):
               "fps": str(Fraction(video["r_frame_rate"])),
               "container": info["format"]["format_name"].split(",")}
     actual["pix_fmt"] = actual["pix_fmt"].replace("yuvj", "yuv")
+    if "pcm_samples_per_track" in expected:
+        actual["pcm_samples_per_track"] = [
+            int(s["duration_ts"]) * Fraction(s["time_base"]) * int(s["sample_rate"])
+            if s.get("duration_ts") is not None and s.get("sample_rate") == "48000" else None
+            for s in audio]
     if scan_counts is not None and expected.get("field_order") == "progressive":
         if scan_counts["progressive"] == count:
             if actual.get("field_order") in (None, "unknown"):
@@ -282,7 +293,83 @@ def check_contract(info, expected, count, scan_counts=None):
     return errors, review
 
 
-def verify(path, reference=None, expected=None, details=True):
+def loop_boundary(path, video, audio, count):
+    """Inspect adjacent pictures and decoded samples either side of a file restart."""
+    if count < 4:
+        raise ValueError("Loop analysis needs at least four pictures.")
+    filt = f"select='lt(n,2)+gte(n,{count-2})',scale=320:180,format=rgb24"
+    raw = subprocess.check_output(decode_input(path) + ["-map", f"0:{video['index']}", "-vf", filt,
+        "-fps_mode", "passthrough", "-threads", "1", "-f", "rawvideo", "-"], timeout=3600)
+    size = 320 * 180 * 3
+    if len(raw) != size * 4:
+        raise ValueError("Could not decode both ends of the loop.")
+    pictures = [Image.frombytes("RGB", (320,180), raw[i:i+size]) for i in range(0,len(raw),size)]
+    def difference(a, b):
+        hist = ImageChops.difference(a, b).histogram()
+        return sum(i % 256 * n for i, n in enumerate(hist)) / size
+    seam = difference(pictures[-1], pictures[0])
+    adjacent = [difference(pictures[i], pictures[i+1]) for i in (0, 2)]
+    findings = []
+    if seam > max(1., 2 * max(adjacent)):
+        findings.append("Loop picture transition exceeds neighbouring motion. Check for a cut or an intentional flash.")
+    measured = []
+    if video.get("duration_ts") is not None:
+        span = int(video["duration_ts"]) * Fraction(video["time_base"])
+    else:
+        span = count / Fraction(video["avg_frame_rate"])
+    for stream in audio:
+        channels, rate = stream["channels"], int(stream["sample_rate"])
+        # Retain only the boundary samples, even for long multichannel material.
+        window = channels * 2 * 96
+        head = tail = b""
+        total = 0
+        with tempfile.TemporaryFile() as log, subprocess.Popen(decode_input(path) +
+                ["-map", f"0:{stream['index']}", "-c:a", "pcm_s16le", "-f", "s16le", "-"],
+                stdout=subprocess.PIPE, stderr=log) as proc:
+            watchdog = threading.Timer(3600, proc.kill)
+            watchdog.daemon = True
+            watchdog.start()
+            try:
+                with proc.stdout:
+                    for chunk in iter(lambda: proc.stdout.read(65536), b""):
+                        total += len(chunk)
+                        if len(head) < window:
+                            head += chunk[:window-len(head)]
+                        tail = (tail + chunk)[-window:]
+                if proc.wait() or len(head) < channels*4:
+                    raise ValueError("Could not decode loop boundary audio.")
+            finally:
+                watchdog.cancel()
+        first, last = array("h", head), array("h", tail)
+        if sys.byteorder == "big":
+            first.byteswap()
+            last.byteswap()
+        steps = []
+        for ch in range(channels):
+            start, end = first[ch::channels], last[ch::channels]
+            jump = abs(start[0] - end[-1])
+            local = max(abs(b-a) for seq in (start,end) for a,b in zip(seq,seq[1:]))
+            steps.append(jump)
+            if jump > max(32, 2 * local):
+                findings.append(f"Audio track {stream['index']} channel {ch+1} has an unusually large step at the join.")
+        samples = total // (2 * channels)
+        offset = samples - round(span * rate)
+        start_offset = None
+        if stream.get("start_pts") is not None and video.get("start_pts") is not None:
+            start_offset = round(rate * (int(stream["start_pts"]) * Fraction(stream["time_base"])
+                                        - int(video["start_pts"]) * Fraction(video["time_base"])))
+            if abs(start_offset) > 1:
+                findings.append(f"Audio track {stream['index']} starts {start_offset} samples relative to picture.")
+        if abs(offset) > 1:
+            findings.append(f"Audio track {stream['index']} differs from the picture by {offset} decoded samples.")
+        if stream["codec_name"] == "aac":
+            findings.append(f"Track {stream['index']} uses AAC. Gapless playback depends on handling encoder priming and padding.")
+        measured.append({"stream":stream["index"], "samples_per_channel":samples, "rate":rate,
+                         "offset_from_video_samples":offset, "start_offset_samples":start_offset, "join_step_s16":steps})
+    return {"picture":{"seam_mean":seam, "adjacent_means":adjacent}, "audio":measured}, findings
+
+
+def verify(path, reference=None, expected=None, details=True, loop=False):
     path = Path(path).resolve()
     report = {"status": "failed", "errors": [], "review": [], "anc_checksums": "not tested"}
     try:
@@ -295,6 +382,9 @@ def verify(path, reference=None, expected=None, details=True):
             directory = Path(temp)
             report["scan"] = scan(path, video, directory, bool(audio))
             count = report["scan"]["decoded_frames"]
+            if loop:
+                report["loop_boundary"], findings = loop_boundary(path, video, audio, count)
+                report["review"].extend(findings)
             if video.get("nb_frames", "").isdigit() and int(video["nb_frames"]) != count:
                 report["errors"].append("Decoded count differs from the declared frame count.")
             if report["scan"]["consecutive_identical"] or report["scan"]["near_freezes"]:
@@ -354,7 +444,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("file", type=Path)
     parser.add_argument("--reference", type=Path)
+    parser.add_argument("--loop", action="store_true", help="Inspect picture and audio transitions when the file repeats.")
     args = parser.parse_args()
-    result = verify(args.file, reference=args.reference)
+    result = verify(args.file, reference=args.reference, loop=args.loop)
     print(json.dumps(result, indent=2))
     raise SystemExit(1 if result["errors"] else 0)

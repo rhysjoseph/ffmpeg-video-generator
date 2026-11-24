@@ -1,0 +1,20 @@
+{
+  "cycles": 3,
+  "pictures_per_cycle": 600,
+  "video_frames": 1800,
+  "video_time_base": "1/60000",
+  "frame_steps_ticks": [
+    1001
+  ],
+  "decoded_video_cycles_identical": true,
+  "audio_channels": 8,
+  "audio_samples_per_channel": 1441440,
+  "pcm_cycles_identical": true,
+  "video_join_pts_steps": [
+    1001,
+    1001
+  ],
+  "audio_timestamp_gaps_ticks": [
+    0
+  ]
+}

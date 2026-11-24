@@ -1,0 +1,460 @@
+{
+  "tools": {
+    "ffmpeg": "ffmpeg version 9.0.2 Copyright (c) 2000-2026 the FFmpeg developers",
+    "ffprobe": "ffprobe version 9.0.2 Copyright (c) 2007-2026 the FFmpeg developers"
+  },
+  "cases": [
+    {
+      "seconds": 10,
+      "loop_boundary": {
+        "picture": {
+          "seam_mean": 1.3898668981481481,
+          "adjacent_means": [
+            1.4610185185185185,
+            1.4171354166666668
+          ]
+        },
+        "audio": [
+          {
+            "stream": 1,
+            "samples_per_channel": 480480,
+            "rate": 48000,
+            "offset_from_video_samples": 0,
+            "join_step_s16": [
+              428,
+              428
+            ]
+          },
+          {
+            "stream": 2,
+            "samples_per_channel": 480480,
+            "rate": 48000,
+            "offset_from_video_samples": 0,
+            "join_step_s16": [
+              428,
+              428
+            ]
+          },
+          {
+            "stream": 3,
+            "samples_per_channel": 480480,
+            "rate": 48000,
+            "offset_from_video_samples": 0,
+            "join_step_s16": [
+              428,
+              428
+            ]
+          },
+          {
+            "stream": 4,
+            "samples_per_channel": 480480,
+            "rate": 48000,
+            "offset_from_video_samples": 0,
+            "join_step_s16": [
+              428,
+              428
+            ]
+          }
+        ]
+      },
+      "cycle_seconds": 10.01,
+      "status": "checks passed",
+      "errors": [],
+      "review": [],
+      "expected_frames": 600,
+      "generated": {
+        "frames_decoded": 600,
+        "audio_decode": "all mapped tracks",
+        "decoder_errors": 0
+      },
+      "audio_seconds": {
+        "generated": [
+          10.01,
+          10.01,
+          10.01,
+          10.01
+        ],
+        "converted": [
+          10.01,
+          10.01,
+          10.01,
+          10.01
+        ]
+      },
+      "converted": {
+        "decoded_frames": 600,
+        "scan_counts": {
+          "progressive": 600,
+          "tff": 0,
+          "bff": 0
+        },
+        "consecutive_identical": 0,
+        "near_freezes": 0,
+        "first_freeze_starts_seconds": [],
+        "sample_extrema": {
+          "YMIN": 4.0,
+          "YMAX": 1019.0,
+          "UMIN": 13.0,
+          "UMAX": 1019.0,
+          "VMIN": 21.0,
+          "VMAX": 998.0
+        }
+      },
+      "comparison": {
+        "frames": 600,
+        "top_half": {
+          "mean_error": 0.00043113425925925925,
+          "large_error_fraction": 0.0,
+          "peak": 4
+        },
+        "bottom_half": {
+          "mean_error": 0.0019409079218106996,
+          "large_error_fraction": 0.0,
+          "peak": 5
+        },
+        "flat_channel_samples": 374997600,
+        "flat_large_errors": 0,
+        "first_flat_error": null
+      }
+    },
+    {
+      "seconds": 30,
+      "loop_boundary": {
+        "picture": {
+          "seam_mean": 1.8040162037037037,
+          "adjacent_means": [
+            1.882204861111111,
+            2.294988425925926
+          ]
+        },
+        "audio": [
+          {
+            "stream": 1,
+            "samples_per_channel": 1441440,
+            "rate": 48000,
+            "offset_from_video_samples": 0,
+            "join_step_s16": [
+              428,
+              428
+            ]
+          },
+          {
+            "stream": 2,
+            "samples_per_channel": 1441440,
+            "rate": 48000,
+            "offset_from_video_samples": 0,
+            "join_step_s16": [
+              428,
+              428
+            ]
+          },
+          {
+            "stream": 3,
+            "samples_per_channel": 1441440,
+            "rate": 48000,
+            "offset_from_video_samples": 0,
+            "join_step_s16": [
+              428,
+              428
+            ]
+          },
+          {
+            "stream": 4,
+            "samples_per_channel": 1441440,
+            "rate": 48000,
+            "offset_from_video_samples": 0,
+            "join_step_s16": [
+              428,
+              428
+            ]
+          }
+        ]
+      },
+      "cycle_seconds": 30.03,
+      "status": "checks passed",
+      "errors": [],
+      "review": [],
+      "expected_frames": 1800,
+      "generated": {
+        "frames_decoded": 1800,
+        "audio_decode": "all mapped tracks",
+        "decoder_errors": 0
+      },
+      "audio_seconds": {
+        "generated": [
+          30.03,
+          30.03,
+          30.03,
+          30.03
+        ],
+        "converted": [
+          30.03,
+          30.03,
+          30.03,
+          30.03
+        ]
+      },
+      "converted": {
+        "decoded_frames": 1800,
+        "scan_counts": {
+          "progressive": 1800,
+          "tff": 0,
+          "bff": 0
+        },
+        "consecutive_identical": 0,
+        "near_freezes": 0,
+        "first_freeze_starts_seconds": [],
+        "sample_extrema": {
+          "YMIN": 4.0,
+          "YMAX": 1019.0,
+          "UMIN": 9.0,
+          "UMAX": 1019.0,
+          "VMIN": 4.0,
+          "VMAX": 1019.0
+        }
+      },
+      "comparison": {
+        "frames": 1800,
+        "top_half": {
+          "mean_error": 0.0007542438271604938,
+          "large_error_fraction": 0.0,
+          "peak": 11
+        },
+        "bottom_half": {
+          "mean_error": 0.002374292695473251,
+          "large_error_fraction": 0.0,
+          "peak": 9
+        },
+        "flat_channel_samples": 1134081000,
+        "flat_large_errors": 0,
+        "first_flat_error": null
+      }
+    },
+    {
+      "seconds": 60,
+      "loop_boundary": {
+        "picture": {
+          "seam_mean": 1.7967939814814815,
+          "adjacent_means": [
+            1.8810416666666667,
+            2.2836226851851853
+          ]
+        },
+        "audio": [
+          {
+            "stream": 1,
+            "samples_per_channel": 2882880,
+            "rate": 48000,
+            "offset_from_video_samples": 0,
+            "join_step_s16": [
+              428,
+              428
+            ]
+          },
+          {
+            "stream": 2,
+            "samples_per_channel": 2882880,
+            "rate": 48000,
+            "offset_from_video_samples": 0,
+            "join_step_s16": [
+              428,
+              428
+            ]
+          },
+          {
+            "stream": 3,
+            "samples_per_channel": 2882880,
+            "rate": 48000,
+            "offset_from_video_samples": 0,
+            "join_step_s16": [
+              428,
+              428
+            ]
+          },
+          {
+            "stream": 4,
+            "samples_per_channel": 2882880,
+            "rate": 48000,
+            "offset_from_video_samples": 0,
+            "join_step_s16": [
+              428,
+              428
+            ]
+          }
+        ]
+      },
+      "cycle_seconds": 60.06,
+      "status": "checks passed",
+      "errors": [],
+      "review": [],
+      "expected_frames": 3600,
+      "generated": {
+        "frames_decoded": 3600,
+        "audio_decode": "all mapped tracks",
+        "decoder_errors": 0
+      },
+      "audio_seconds": {
+        "generated": [
+          60.06,
+          60.06,
+          60.06,
+          60.06
+        ],
+        "converted": [
+          60.06,
+          60.06,
+          60.06,
+          60.06
+        ]
+      },
+      "converted": {
+        "decoded_frames": 3600,
+        "scan_counts": {
+          "progressive": 3600,
+          "tff": 0,
+          "bff": 0
+        },
+        "consecutive_identical": 0,
+        "near_freezes": 0,
+        "first_freeze_starts_seconds": [],
+        "sample_extrema": {
+          "YMIN": 4.0,
+          "YMAX": 1019.0,
+          "UMIN": 4.0,
+          "UMAX": 1019.0,
+          "VMIN": 4.0,
+          "VMAX": 1019.0
+        }
+      },
+      "comparison": {
+        "frames": 3600,
+        "top_half": {
+          "mean_error": 0.0009792952674897118,
+          "large_error_fraction": 0.0,
+          "peak": 8
+        },
+        "bottom_half": {
+          "mean_error": 0.002854938271604938,
+          "large_error_fraction": 0.0,
+          "peak": 7
+        },
+        "flat_channel_samples": 2271223800,
+        "flat_large_errors": 0,
+        "first_flat_error": null
+      }
+    },
+    {
+      "seconds": 120,
+      "loop_boundary": {
+        "picture": {
+          "seam_mean": 1.7885763888888888,
+          "adjacent_means": [
+            1.8803993055555555,
+            1.8563078703703704
+          ]
+        },
+        "audio": [
+          {
+            "stream": 1,
+            "samples_per_channel": 5765760,
+            "rate": 48000,
+            "offset_from_video_samples": 0,
+            "join_step_s16": [
+              428,
+              428
+            ]
+          },
+          {
+            "stream": 2,
+            "samples_per_channel": 5765760,
+            "rate": 48000,
+            "offset_from_video_samples": 0,
+            "join_step_s16": [
+              428,
+              428
+            ]
+          },
+          {
+            "stream": 3,
+            "samples_per_channel": 5765760,
+            "rate": 48000,
+            "offset_from_video_samples": 0,
+            "join_step_s16": [
+              428,
+              428
+            ]
+          },
+          {
+            "stream": 4,
+            "samples_per_channel": 5765760,
+            "rate": 48000,
+            "offset_from_video_samples": 0,
+            "join_step_s16": [
+              428,
+              428
+            ]
+          }
+        ]
+      },
+      "cycle_seconds": 120.12,
+      "status": "checks passed",
+      "errors": [],
+      "review": [],
+      "expected_frames": 7200,
+      "generated": {
+        "frames_decoded": 7200,
+        "audio_decode": "all mapped tracks",
+        "decoder_errors": 0
+      },
+      "audio_seconds": {
+        "generated": [
+          120.12,
+          120.12,
+          120.12,
+          120.12
+        ],
+        "converted": [
+          120.12,
+          120.12,
+          120.12,
+          120.12
+        ]
+      },
+      "converted": {
+        "decoded_frames": 7200,
+        "scan_counts": {
+          "progressive": 7200,
+          "tff": 0,
+          "bff": 0
+        },
+        "consecutive_identical": 0,
+        "near_freezes": 0,
+        "first_freeze_starts_seconds": [],
+        "sample_extrema": {
+          "YMIN": 4.0,
+          "YMAX": 1019.0,
+          "UMIN": 4.0,
+          "UMAX": 1009.0,
+          "VMIN": 10.0,
+          "VMAX": 1019.0
+        }
+      },
+      "comparison": {
+        "frames": 7200,
+        "top_half": {
+          "mean_error": 0.0010583847736625514,
+          "large_error_fraction": 0.0,
+          "peak": 10
+        },
+        "bottom_half": {
+          "mean_error": 0.001964377572016461,
+          "large_error_fraction": 0.0,
+          "peak": 7
+        },
+        "flat_channel_samples": 4564317600,
+        "flat_large_errors": 0,
+        "first_flat_error": null
+      }
+    }
+  ]
+}

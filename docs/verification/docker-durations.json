@@ -1,0 +1,261 @@
+{
+  "tools": {
+    "ffmpeg": "ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers",
+    "ffprobe": "ffprobe version 7.1.5-0+deb13u1 Copyright (c) 2007-2026 the FFmpeg developers",
+    "mediainfo": "MediaInfoLib - v25.04"
+  },
+  "cases": [
+    {
+      "seconds": 10,
+      "status": "review",
+      "errors": [],
+      "review": [
+        "ProRes colour range is unreported. Expected tv. Review the measured sample levels and reference comparison."
+      ],
+      "expected_frames": 599,
+      "generated": {
+        "frames_decoded": 599,
+        "audio_decode": "all mapped tracks",
+        "decoder_errors": 0
+      },
+      "audio_seconds": {
+        "generated": [
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "converted": [
+          9.9933125,
+          9.9933125,
+          9.9933125,
+          9.9933125
+        ]
+      },
+      "converted": {
+        "decoded_frames": 599,
+        "scan_counts": {
+          "progressive": 599,
+          "tff": 0,
+          "bff": 0
+        },
+        "consecutive_identical": 0,
+        "near_freezes": 0,
+        "first_freeze_starts_seconds": [],
+        "sample_extrema": {
+          "YMIN": 4.0,
+          "YMAX": 1019.0,
+          "UMIN": 5.0,
+          "UMAX": 1003.0,
+          "VMIN": 4.0,
+          "VMAX": 1008.0
+        }
+      },
+      "comparison": {
+        "frames": 599,
+        "top_half": {
+          "mean_error": 0.0004089506172839506,
+          "large_error_fraction": 0.0,
+          "peak": 4
+        },
+        "bottom_half": {
+          "mean_error": 0.0032664609053497944,
+          "large_error_fraction": 0.0,
+          "peak": 7
+        },
+        "flat_channel_samples": 336943800,
+        "flat_large_errors": 0,
+        "first_flat_error": null
+      }
+    },
+    {
+      "seconds": 30,
+      "status": "review",
+      "errors": [],
+      "review": [
+        "ProRes colour range is unreported. Expected tv. Review the measured sample levels and reference comparison."
+      ],
+      "expected_frames": 1798,
+      "generated": {
+        "frames_decoded": 1798,
+        "audio_decode": "all mapped tracks",
+        "decoder_errors": 0
+      },
+      "audio_seconds": {
+        "generated": [
+          30.0,
+          30.0,
+          30.0,
+          30.0
+        ],
+        "converted": [
+          29.996625,
+          29.996625,
+          29.996625,
+          29.996625
+        ]
+      },
+      "converted": {
+        "decoded_frames": 1798,
+        "scan_counts": {
+          "progressive": 1798,
+          "tff": 0,
+          "bff": 0
+        },
+        "consecutive_identical": 0,
+        "near_freezes": 0,
+        "first_freeze_starts_seconds": [],
+        "sample_extrema": {
+          "YMIN": 4.0,
+          "YMAX": 1019.0,
+          "UMIN": 4.0,
+          "UMAX": 1007.0,
+          "VMIN": 4.0,
+          "VMAX": 1008.0
+        }
+      },
+      "comparison": {
+        "frames": 1798,
+        "top_half": {
+          "mean_error": 0.0015290637860082305,
+          "large_error_fraction": 0.0,
+          "peak": 15
+        },
+        "bottom_half": {
+          "mean_error": 0.0032664609053497944,
+          "large_error_fraction": 0.0,
+          "peak": 7
+        },
+        "flat_channel_samples": 1021863600,
+        "flat_large_errors": 0,
+        "first_flat_error": null
+      }
+    },
+    {
+      "seconds": 60,
+      "status": "review",
+      "errors": [],
+      "review": [
+        "ProRes colour range is unreported. Expected tv. Review the measured sample levels and reference comparison."
+      ],
+      "expected_frames": 3596,
+      "generated": {
+        "frames_decoded": 3596,
+        "audio_decode": "all mapped tracks",
+        "decoder_errors": 0
+      },
+      "audio_seconds": {
+        "generated": [
+          60.0,
+          60.0,
+          60.0,
+          60.0
+        ],
+        "converted": [
+          59.993270833333334,
+          59.993270833333334,
+          59.993270833333334,
+          59.993270833333334
+        ]
+      },
+      "converted": {
+        "decoded_frames": 3596,
+        "scan_counts": {
+          "progressive": 3596,
+          "tff": 0,
+          "bff": 0
+        },
+        "consecutive_identical": 0,
+        "near_freezes": 0,
+        "first_freeze_starts_seconds": [],
+        "sample_extrema": {
+          "YMIN": 4.0,
+          "YMAX": 1019.0,
+          "UMIN": 4.0,
+          "UMAX": 1013.0,
+          "VMIN": 4.0,
+          "VMAX": 1019.0
+        }
+      },
+      "comparison": {
+        "frames": 3596,
+        "top_half": {
+          "mean_error": 0.0015290637860082305,
+          "large_error_fraction": 0.0,
+          "peak": 16
+        },
+        "bottom_half": {
+          "mean_error": 0.003349729938271605,
+          "large_error_fraction": 0.0,
+          "peak": 7
+        },
+        "flat_channel_samples": 2043727200,
+        "flat_large_errors": 0,
+        "first_flat_error": null
+      }
+    },
+    {
+      "seconds": 120,
+      "status": "review",
+      "errors": [],
+      "review": [
+        "ProRes colour range is unreported. Expected tv. Review the measured sample levels and reference comparison."
+      ],
+      "expected_frames": 7193,
+      "generated": {
+        "frames_decoded": 7193,
+        "audio_decode": "all mapped tracks",
+        "decoder_errors": 0
+      },
+      "audio_seconds": {
+        "generated": [
+          120.0,
+          120.0,
+          120.0,
+          120.0
+        ],
+        "converted": [
+          120.0,
+          120.0,
+          120.0,
+          120.0
+        ]
+      },
+      "converted": {
+        "decoded_frames": 7193,
+        "scan_counts": {
+          "progressive": 7193,
+          "tff": 0,
+          "bff": 0
+        },
+        "consecutive_identical": 0,
+        "near_freezes": 0,
+        "first_freeze_starts_seconds": [],
+        "sample_extrema": {
+          "YMIN": 4.0,
+          "YMAX": 1019.0,
+          "UMIN": 4.0,
+          "UMAX": 1013.0,
+          "VMIN": 4.0,
+          "VMAX": 1019.0
+        }
+      },
+      "comparison": {
+        "frames": 7193,
+        "top_half": {
+          "mean_error": 0.0026594650205761317,
+          "large_error_fraction": 0.0,
+          "peak": 31
+        },
+        "bottom_half": {
+          "mean_error": 0.0034024562757201645,
+          "large_error_fraction": 0.0,
+          "peak": 7
+        },
+        "flat_channel_samples": 4091050800,
+        "flat_large_errors": 0,
+        "first_flat_error": null
+      }
+    }
+  ]
+}
