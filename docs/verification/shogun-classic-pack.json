@@ -1,0 +1,346 @@
+{
+  "model": "Shogun Classic",
+  "firmware": "10.45.01",
+  "delivery_date": "2026-11-25",
+  "encoder": "Apple VideoToolbox ProRes 422 HQ",
+  "verified_bytes": 2503236108,
+  "verified_frames": 8310,
+  "files": [
+    {
+      "file": "Bars_1280x720_50p_10bit.mov",
+      "sha256": "f8c7d9bb44a2676c5cdc6ac2eb8a60fb3817fb6a3a04a3d8abe6be0b1ada8ae2",
+      "bytes": 59346388,
+      "rate": "50",
+      "label": "1280x720 50p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 500,
+      "runtime_seconds": 10.0,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "file": "Bars_1280x720_59.94p_10bit.mov",
+      "sha256": "6aaf5877531b63b10cb378e546bd6b7b12f26b8462850f1d5d680034d1c17276",
+      "bytes": 71968244,
+      "rate": "60000/1001",
+      "label": "1280x720 59.94p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 600,
+      "runtime_seconds": 10.01,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "file": "Bars_1280x720_60p_10bit.mov",
+      "sha256": "8dcfe57189d1baad4b23f2b3931721409d01a326f3e4d025111f7fe9be198dca",
+      "bytes": 70827224,
+      "rate": "60",
+      "label": "1280x720 60p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 600,
+      "runtime_seconds": 10.0,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "file": "Bars_1920x1080_23.98p_10bit.mov",
+      "sha256": "dd9bb1164df78e15ca07e5ddb535ecc59b93dc159c4f5334fc896fbe53047684",
+      "bytes": 48928356,
+      "rate": "24000/1001",
+      "label": "1920x1080 23.98p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 240,
+      "runtime_seconds": 10.01,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "file": "Bars_1920x1080_24p_10bit.mov",
+      "sha256": "67eb7004e602209138549b186b8912e0ad72c71a4c76b2f404f39fe6d5bd4ff1",
+      "bytes": 48227372,
+      "rate": "24",
+      "label": "1920x1080 24p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 240,
+      "runtime_seconds": 10.0,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "file": "Bars_1920x1080_25p_10bit.mov",
+      "sha256": "6f927a4b4aa06862def6728437f8f945e02e5674e35704c9ad97a2e16018e4d5",
+      "bytes": 50376356,
+      "rate": "25",
+      "label": "1920x1080 25p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 250,
+      "runtime_seconds": 10.0,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "file": "Bars_1920x1080_29.97p_10bit.mov",
+      "sha256": "ca378e20387b13fdadffaf54c439801d90ac693a1b68c234ae37034c90788b33",
+      "bytes": 60755512,
+      "rate": "30000/1001",
+      "label": "1920x1080 29.97p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 300,
+      "runtime_seconds": 10.01,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "file": "Bars_1920x1080_30p_10bit.mov",
+      "sha256": "925506b8d2e2b71f161dcc1c06df530ac25d3d959034346ac102bd3430a1409b",
+      "bytes": 59896292,
+      "rate": "30",
+      "label": "1920x1080 30p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 300,
+      "runtime_seconds": 10.0,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "file": "Bars_1920x1080_50i_10bit.mov",
+      "sha256": "c35951a00b939734388a3971135b9451ae9900cb6332f0adc9fd20798f27d7d8",
+      "bytes": 62975526,
+      "rate": "25",
+      "label": "1920x1080 50i TFF  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 250,
+      "runtime_seconds": 10.0,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        3,
+        3,
+        3
+      ]
+    },
+    {
+      "file": "Bars_1920x1080_50p_10bit.mov",
+      "sha256": "4bad25502c2fb128c2daa840f9fe524f811ca793b00b66a995bf219ffe15eb0c",
+      "bytes": 101649508,
+      "rate": "50",
+      "label": "1920x1080 50p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 500,
+      "runtime_seconds": 10.0,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "file": "Bars_1920x1080_59.94i_10bit.mov",
+      "sha256": "c038fb5009656bca3db225926db9f8d4ff284537d3d7ee38c62273e0fe911557",
+      "bytes": 76715562,
+      "rate": "30000/1001",
+      "label": "1920x1080 59.94i TFF  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 300,
+      "runtime_seconds": 10.01,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        3,
+        3,
+        3
+      ]
+    },
+    {
+      "file": "Bars_1920x1080_59.94p_10bit.mov",
+      "sha256": "1bdf485f9b9b525d38b0eae0cf860b64dfcb19302efe67cd98fbe40580e98387",
+      "bytes": 123033332,
+      "rate": "60000/1001",
+      "label": "1920x1080 59.94p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 600,
+      "runtime_seconds": 10.01,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "file": "Bars_1920x1080_60p_10bit.mov",
+      "sha256": "4241de0f823ef9d3c66f85a9ecb4d51875490eed034a82ac8fdc6b14378eba1b",
+      "bytes": 121550152,
+      "rate": "60",
+      "label": "1920x1080 60p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 600,
+      "runtime_seconds": 10.0,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "file": "Bars_3840x2160_23.98p_10bit.mov",
+      "sha256": "5eda7b93bdda7f04059f90b8ff19a22f7c7f2593f74404a66870c31bb260aeae",
+      "bytes": 119406020,
+      "rate": "24000/1001",
+      "label": "3840x2160 23.98p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 240,
+      "runtime_seconds": 10.01,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "file": "Bars_3840x2160_24p_10bit.mov",
+      "sha256": "553a59dda061fa6569b75b30d0b88405258acddc90dab0cd676ff74f9acb24d8",
+      "bytes": 117857948,
+      "rate": "24",
+      "label": "3840x2160 24p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 240,
+      "runtime_seconds": 10.0,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "file": "Bars_3840x2160_25p_10bit.mov",
+      "sha256": "82250eb949b553b430aaedaff5b64baefe46f3f0400952fe76a897936204ec79",
+      "bytes": 124482548,
+      "rate": "25",
+      "label": "3840x2160 25p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 250,
+      "runtime_seconds": 10.0,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "file": "Bars_3840x2160_29.97p_10bit.mov",
+      "sha256": "b45c6abeb5ed7ceb39f608be4cc8ae99ddc6b9826888657e5f4dfdc8569bfc6a",
+      "bytes": 150199112,
+      "rate": "30000/1001",
+      "label": "3840x2160 29.97p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 300,
+      "runtime_seconds": 10.01,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "file": "Bars_3840x2160_30p_10bit.mov",
+      "sha256": "23b9bbcf66afdd1dfa601e8b37818c4a97258303258bb361c76d640dd68fb0bd",
+      "bytes": 148784564,
+      "rate": "30",
+      "label": "3840x2160 30p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 300,
+      "runtime_seconds": 10.0,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "file": "Bars_3840x2160_50p_10bit.mov",
+      "sha256": "21addc6d5cdbe0fc6b6e8790fee92ffb7bbf0626e2bf78f5a138c3381645f01a",
+      "bytes": 260019088,
+      "rate": "50",
+      "label": "3840x2160 50p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 500,
+      "runtime_seconds": 10.0,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "file": "Bars_3840x2160_59.94p_10bit.mov",
+      "sha256": "b117d918079252ad5e697dfa2a83bedcfea407251ca1176fd31935585391f9d3",
+      "bytes": 314507004,
+      "rate": "60000/1001",
+      "label": "3840x2160 59.94p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 600,
+      "runtime_seconds": 10.01,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "file": "Bars_3840x2160_60p_10bit.mov",
+      "sha256": "66377ff5ff0fab427fc42c493c53d3bc3715ab30df74975344b6d509635e06ee",
+      "bytes": 311730000,
+      "rate": "60",
+      "label": "3840x2160 60p  |  ProRes 422 HQ  |  10-bit 4:2:2  |  Rec.709 Limited",
+      "expected_frames": 600,
+      "runtime_seconds": 10.0,
+      "file_checks": "checks passed",
+      "max_10bit_Y_Cb_Cr": [
+        2,
+        2,
+        2
+      ]
+    }
+  ],
+  "retired_profiles": [
+    "Bars_1280x720_23.98p_10bit.mov",
+    "Bars_1280x720_24p_10bit.mov",
+    "Bars_1280x720_25p_10bit.mov",
+    "Bars_1280x720_29.97p_10bit.mov",
+    "Bars_1280x720_30p_10bit.mov",
+    "Bars_1280x720_50i_10bit.mov",
+    "Bars_1280x720_59.94i_10bit.mov",
+    "Bars_2560x1440_23.98p_10bit.mov",
+    "Bars_2560x1440_24p_10bit.mov",
+    "Bars_2560x1440_25p_10bit.mov",
+    "Bars_2560x1440_29.97p_10bit.mov",
+    "Bars_2560x1440_30p_10bit.mov",
+    "Bars_2560x1440_50i_10bit.mov",
+    "Bars_2560x1440_50p_10bit.mov",
+    "Bars_2560x1440_59.94i_10bit.mov",
+    "Bars_2560x1440_59.94p_10bit.mov",
+    "Bars_2560x1440_60p_10bit.mov",
+    "Bars_3840x2160_50i_10bit.mov",
+    "Bars_3840x2160_59.94i_10bit.mov"
+  ]
+}

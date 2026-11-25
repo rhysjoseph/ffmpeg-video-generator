@@ -6,6 +6,8 @@ A local FFmpeg test-pattern generator and video converter for macOS, with a brow
 
 For repeatable playback, select **Seamless loop** and a MOV output. **Verify video → Check loop boundary** measures the picture and sound at the join. The [duration and SDI qualification results](docs/verification/README.md#full-length-exports-and-the-sdi-bench) include all four lengths, UltraStudio playout and PRISM captures.
 
+See the [changelog](CHANGELOG.md) for release history and known playback issues.
+
 ## Docker Desktop
 
 Run this command from the project directory.

@@ -38,6 +38,27 @@ class ReliabilityTests(unittest.TestCase):
         self.assertEqual(result["pre_encoder"]["max_patch_error_codes"], 0)
         self.assertGreater(result["pre_encoder"]["ramp_distinct_interior_codes"], 1000)
 
+    def test_moving_bars_white_patch_tracks_full_1080p50_loop(self):
+        settings = Settings(resolution="1920x1080", rate="50p", duration=10, pattern="scroll",
+                            delivery_profile="prores_hq", container="mov", bit_depth=10, chroma="422",
+                            seamless_loop=True, timecode=False, freeze_box=False)
+        path = self.root / "moving-bars.mov"
+        render(settings, path)
+        # Read the bottom line's luma. The RP 219 plate starts with a 412-sample
+        # white patch at x=548. Count all its pixels, including when it wraps.
+        raw = subprocess.check_output([FFMPEG, "-v", "error", "-i", str(path), "-an",
+            "-vf", "extractplanes=y,crop=1920:1:0:1079,format=gray", "-fps_mode", "passthrough",
+            "-threads", "1", "-f", "rawvideo", "-"])
+        width, frames = 1920, 500
+        self.assertEqual(len(raw), width * frames)
+        white = bytes(548) + bytes([1]) * 412 + bytes(960)
+        wrapped = white + white
+        threshold = bytes(value >= 126 for value in range(256))
+        for n in range(frames):
+            shift = round(n * width / frames)
+            row = raw[n * width:(n + 1) * width].translate(threshold)
+            self.assertTrue(row == wrapped[shift:shift + width], f"White patch differs at frame {n}")
+
     def test_dnx_colour_agrees_in_frames_container_and_picture(self):
         from signal_qualification import convert_case
         result = convert_case(("dnxhr_lb", True), 13, self.root)

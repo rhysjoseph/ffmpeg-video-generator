@@ -1,0 +1,3474 @@
+{
+  "date": "2026-11-25",
+  "units": "Absolute 10-bit code difference. Triples are ordered Y, Cb, Cr. Frame indices are zero based. PRISM preview metrics use 8-bit display RGB.",
+  "source_exports": {
+    "50p": {
+      "file": "Bars_1920x1080_50p_10bit.mov",
+      "sha256": "ffe87de0148423f7ecbe893709f4832d1a867cae35b4f1e36a2803c75cbccc85",
+      "frames": 500,
+      "ffmpeg_vs_apple_full_picture_peak": [
+        1,
+        1,
+        1
+      ],
+      "ffmpeg_vs_lossless_full_picture_peak": [
+        155,
+        25,
+        153
+      ],
+      "ffmpeg_vs_lossless_outside_graphics_peak": [
+        5,
+        5,
+        8
+      ],
+      "lossless_vs_shifted_plate_peak": [
+        0,
+        0,
+        0
+      ]
+    },
+    "50i": {
+      "file": "Bars_1920x1080_50i_10bit.mov",
+      "sha256": "9952db0b191ac980ce23abbf7ea06ab7ec1c16a620ea2e22018ee913e8f34e99",
+      "frames": 250,
+      "ffmpeg_vs_apple_full_picture_peak": [
+        1,
+        1,
+        1
+      ],
+      "ffmpeg_vs_lossless_full_picture_peak": [
+        241,
+        23,
+        216
+      ],
+      "ffmpeg_vs_lossless_outside_graphics_peak": [
+        9,
+        7,
+        8
+      ],
+      "lossless_vs_shifted_plate_peak": [
+        0,
+        0,
+        0
+      ]
+    },
+    "59.94i": {
+      "file": "Bars_1920x1080_59.94i_10bit.mov",
+      "sha256": "9d2344f89398bbf4d7b4d5bc1810d899991be8685b9924161dec0f72c4e2d3a4",
+      "frames": 300,
+      "ffmpeg_vs_apple_full_picture_peak": [
+        1,
+        1,
+        1
+      ],
+      "ffmpeg_vs_lossless_full_picture_peak": [
+        183,
+        26,
+        174
+      ],
+      "ffmpeg_vs_lossless_outside_graphics_peak": [
+        13,
+        8,
+        7
+      ],
+      "lossless_vs_shifted_plate_peak": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "marks": {
+    "00:43": {
+      "50p": {
+        "frame": 43,
+        "three_frame_window": [
+          {
+            "frame": 42,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              0,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 43,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              0,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              2
+            ]
+          },
+          {
+            "frame": 44,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              0,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "50i_burned_TC": null,
+      "50i_if_field_count": {
+        "frame": 21,
+        "three_frame_window": [
+          {
+            "frame": 20,
+            "peak_middle_third_all": [
+              4,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              0,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              5,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 21,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              0,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              5,
+              2,
+              2
+            ]
+          },
+          {
+            "frame": 22,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              0,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              5,
+              2,
+              3
+            ]
+          }
+        ],
+        "field": "bottom"
+      },
+      "prism": "bottom-edge strip on 1080p50"
+    },
+    "03:15": {
+      "50p": {
+        "frame": 165,
+        "three_frame_window": [
+          {
+            "frame": 164,
+            "peak_middle_third_all": [
+              2,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              2
+            ]
+          },
+          {
+            "frame": 165,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              2
+            ]
+          },
+          {
+            "frame": 166,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "50i_burned_TC": {
+        "frame": 90,
+        "three_frame_window": [
+          {
+            "frame": 89,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 90,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 91,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "50i_if_field_count": {
+        "frame": 82,
+        "three_frame_window": [
+          {
+            "frame": 81,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              5,
+              3,
+              2
+            ]
+          },
+          {
+            "frame": 82,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              5,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 83,
+            "peak_middle_third_all": [
+              5,
+              5,
+              4
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              5,
+              5,
+              4
+            ]
+          }
+        ],
+        "field": "bottom"
+      },
+      "prism": "not captured at this mark"
+    },
+    "03:19": {
+      "50p": {
+        "frame": 169,
+        "three_frame_window": [
+          {
+            "frame": 168,
+            "peak_middle_third_all": [
+              3,
+              3,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              2
+            ]
+          },
+          {
+            "frame": 169,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 170,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              1,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "50i_burned_TC": {
+        "frame": 94,
+        "three_frame_window": [
+          {
+            "frame": 93,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              3,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              2
+            ]
+          },
+          {
+            "frame": 94,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              3,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 95,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              3,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              3
+            ]
+          }
+        ]
+      },
+      "50i_if_field_count": {
+        "frame": 84,
+        "three_frame_window": [
+          {
+            "frame": 83,
+            "peak_middle_third_all": [
+              5,
+              5,
+              4
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              5,
+              5,
+              4
+            ]
+          },
+          {
+            "frame": 84,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              1,
+              1
+            ],
+            "peak_outside_overlays": [
+              5,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 85,
+            "peak_middle_third_all": [
+              3,
+              3,
+              4
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              5,
+              2,
+              3
+            ]
+          }
+        ],
+        "field": "bottom"
+      },
+      "prism": "not captured at this mark"
+    },
+    "03:26": {
+      "50p": {
+        "frame": 176,
+        "three_frame_window": [
+          {
+            "frame": 175,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              1,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              2
+            ]
+          },
+          {
+            "frame": 176,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              1,
+              1
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 177,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              1
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              2
+            ]
+          }
+        ]
+      },
+      "50i_burned_TC": null,
+      "50i_if_field_count": {
+        "frame": 88,
+        "three_frame_window": [
+          {
+            "frame": 87,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              4,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 88,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              1
+            ],
+            "peak_outside_overlays": [
+              4,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 89,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              3
+            ]
+          }
+        ],
+        "field": "top"
+      },
+      "prism": "not captured at this mark"
+    },
+    "04:01": {
+      "50p": {
+        "frame": 201,
+        "three_frame_window": [
+          {
+            "frame": 200,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              1,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              2
+            ]
+          },
+          {
+            "frame": 201,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              1,
+              1
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 202,
+            "peak_middle_third_all": [
+              3,
+              2,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              2,
+              1
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              2
+            ]
+          }
+        ]
+      },
+      "50i_burned_TC": {
+        "frame": 101,
+        "three_frame_window": [
+          {
+            "frame": 100,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              1,
+              1
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 101,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 102,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              1,
+              1
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "50i_if_field_count": {
+        "frame": 100,
+        "three_frame_window": [
+          {
+            "frame": 99,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 100,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              1,
+              1
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 101,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              3
+            ]
+          }
+        ],
+        "field": "bottom"
+      },
+      "prism": "not captured at this mark"
+    },
+    "06:10": {
+      "50p": {
+        "frame": 310,
+        "three_frame_window": [
+          {
+            "frame": 309,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 310,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              1,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              2
+            ]
+          },
+          {
+            "frame": 311,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              2
+            ]
+          }
+        ]
+      },
+      "50i_burned_TC": {
+        "frame": 160,
+        "three_frame_window": [
+          {
+            "frame": 159,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 160,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 161,
+            "peak_middle_third_all": [
+              4,
+              5,
+              5
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              4,
+              5,
+              5
+            ]
+          }
+        ]
+      },
+      "50i_if_field_count": {
+        "frame": 155,
+        "three_frame_window": [
+          {
+            "frame": 154,
+            "peak_middle_third_all": [
+              4,
+              4,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              3
+            ],
+            "peak_outside_overlays": [
+              4,
+              4,
+              3
+            ]
+          },
+          {
+            "frame": 155,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 156,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              2
+            ]
+          }
+        ],
+        "field": "top"
+      },
+      "prism": "not captured at this mark"
+    },
+    "06:18": {
+      "50p": {
+        "frame": 318,
+        "three_frame_window": [
+          {
+            "frame": 317,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 318,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              2
+            ]
+          },
+          {
+            "frame": 319,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "50i_burned_TC": {
+        "frame": 168,
+        "three_frame_window": [
+          {
+            "frame": 167,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              3
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 168,
+            "peak_middle_third_all": [
+              3,
+              3,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              1,
+              1
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              2
+            ]
+          },
+          {
+            "frame": 169,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              3
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "50i_if_field_count": {
+        "frame": 159,
+        "three_frame_window": [
+          {
+            "frame": 158,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 159,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 160,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          }
+        ],
+        "field": "top"
+      },
+      "prism": "not captured at this mark"
+    },
+    "06:22": {
+      "50p": {
+        "frame": 322,
+        "three_frame_window": [
+          {
+            "frame": 321,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 322,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 323,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              2
+            ]
+          }
+        ]
+      },
+      "50i_burned_TC": {
+        "frame": 172,
+        "three_frame_window": [
+          {
+            "frame": 171,
+            "peak_middle_third_all": [
+              2,
+              2,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              2
+            ]
+          },
+          {
+            "frame": 172,
+            "peak_middle_third_all": [
+              2,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              1
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 173,
+            "peak_middle_third_all": [
+              2,
+              3,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              3,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              2
+            ]
+          }
+        ]
+      },
+      "50i_if_field_count": {
+        "frame": 161,
+        "three_frame_window": [
+          {
+            "frame": 160,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 161,
+            "peak_middle_third_all": [
+              4,
+              5,
+              5
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              4,
+              5,
+              5
+            ]
+          },
+          {
+            "frame": 162,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              3
+            ]
+          }
+        ],
+        "field": "top"
+      },
+      "prism": "not captured at this mark"
+    },
+    "07:29": {
+      "50p": {
+        "frame": 379,
+        "three_frame_window": [
+          {
+            "frame": 378,
+            "peak_middle_third_all": [
+              2,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 379,
+            "peak_middle_third_all": [
+              2,
+              2,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              2
+            ]
+          },
+          {
+            "frame": 380,
+            "peak_middle_third_all": [
+              2,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "50i_burned_TC": null,
+      "50i_if_field_count": {
+        "frame": 189,
+        "three_frame_window": [
+          {
+            "frame": 188,
+            "peak_middle_third_all": [
+              4,
+              4,
+              4
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              4,
+              4,
+              4
+            ]
+          },
+          {
+            "frame": 189,
+            "peak_middle_third_all": [
+              2,
+              3,
+              4
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "frame": 190,
+            "peak_middle_third_all": [
+              5,
+              4,
+              4
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              5,
+              4,
+              4
+            ]
+          }
+        ],
+        "field": "bottom"
+      },
+      "prism": "not captured at this mark"
+    },
+    "08:03": {
+      "50p": {
+        "frame": 403,
+        "three_frame_window": [
+          {
+            "frame": 402,
+            "peak_middle_third_all": [
+              2,
+              2,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              1,
+              1
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              2
+            ]
+          },
+          {
+            "frame": 403,
+            "peak_middle_third_all": [
+              2,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              1,
+              1
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 404,
+            "peak_middle_third_all": [
+              2,
+              2,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              2
+            ]
+          }
+        ]
+      },
+      "50i_burned_TC": {
+        "frame": 203,
+        "three_frame_window": [
+          {
+            "frame": 202,
+            "peak_middle_third_all": [
+              2,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              4,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 203,
+            "peak_middle_third_all": [
+              4,
+              2,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              4,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 204,
+            "peak_middle_third_all": [
+              4,
+              4,
+              4
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              4,
+              4,
+              4
+            ]
+          }
+        ]
+      },
+      "50i_if_field_count": {
+        "frame": 201,
+        "three_frame_window": [
+          {
+            "frame": 200,
+            "peak_middle_third_all": [
+              2,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 201,
+            "peak_middle_third_all": [
+              2,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 202,
+            "peak_middle_third_all": [
+              2,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              4,
+              2,
+              3
+            ]
+          }
+        ],
+        "field": "bottom"
+      },
+      "prism": "not captured at this mark"
+    },
+    "08:07": {
+      "50p": {
+        "frame": 407,
+        "three_frame_window": [
+          {
+            "frame": 406,
+            "peak_middle_third_all": [
+              2,
+              2,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 407,
+            "peak_middle_third_all": [
+              2,
+              2,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              1,
+              1
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              2
+            ]
+          },
+          {
+            "frame": 408,
+            "peak_middle_third_all": [
+              4,
+              4,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              4,
+              4,
+              2
+            ]
+          }
+        ]
+      },
+      "50i_burned_TC": {
+        "frame": 207,
+        "three_frame_window": [
+          {
+            "frame": 206,
+            "peak_middle_third_all": [
+              4,
+              4,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              4,
+              4,
+              3
+            ]
+          },
+          {
+            "frame": 207,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 208,
+            "peak_middle_third_all": [
+              4,
+              4,
+              4
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              5,
+              4,
+              5
+            ]
+          }
+        ]
+      },
+      "50i_if_field_count": {
+        "frame": 203,
+        "three_frame_window": [
+          {
+            "frame": 202,
+            "peak_middle_third_all": [
+              2,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              4,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 203,
+            "peak_middle_third_all": [
+              4,
+              2,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              4,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 204,
+            "peak_middle_third_all": [
+              4,
+              4,
+              4
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              4,
+              4,
+              4
+            ]
+          }
+        ],
+        "field": "bottom"
+      },
+      "prism": "not captured at this mark"
+    },
+    "08:12": {
+      "50p": {
+        "frame": 412,
+        "three_frame_window": [
+          {
+            "frame": 411,
+            "peak_middle_third_all": [
+              2,
+              2,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              1,
+              1
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              2
+            ]
+          },
+          {
+            "frame": 412,
+            "peak_middle_third_all": [
+              4,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              4,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 413,
+            "peak_middle_third_all": [
+              4,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              4,
+              3,
+              3
+            ]
+          }
+        ]
+      },
+      "50i_burned_TC": {
+        "frame": 212,
+        "three_frame_window": [
+          {
+            "frame": 211,
+            "peak_middle_third_all": [
+              3,
+              3,
+              4
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 212,
+            "peak_middle_third_all": [
+              7,
+              5,
+              6
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              5,
+              5,
+              6
+            ]
+          },
+          {
+            "frame": 213,
+            "peak_middle_third_all": [
+              6,
+              5,
+              5
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              1,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              3
+            ]
+          }
+        ]
+      },
+      "50i_if_field_count": {
+        "frame": 206,
+        "three_frame_window": [
+          {
+            "frame": 205,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 206,
+            "peak_middle_third_all": [
+              4,
+              4,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              4,
+              4,
+              3
+            ]
+          },
+          {
+            "frame": 207,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              3
+            ]
+          }
+        ],
+        "field": "top"
+      },
+      "prism": "not captured at this mark"
+    },
+    "09:04": {
+      "50p": {
+        "frame": 454,
+        "three_frame_window": [
+          {
+            "frame": 453,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              3
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 454,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              2
+            ]
+          },
+          {
+            "frame": 455,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "50i_burned_TC": {
+        "frame": 229,
+        "three_frame_window": [
+          {
+            "frame": 228,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              1
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 229,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 230,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              3
+            ]
+          }
+        ]
+      },
+      "50i_if_field_count": {
+        "frame": 227,
+        "three_frame_window": [
+          {
+            "frame": 226,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              1,
+              1
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 227,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 228,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              1
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          }
+        ],
+        "field": "top"
+      },
+      "prism": "not captured at this mark"
+    },
+    "09:06": {
+      "50p": {
+        "frame": 456,
+        "three_frame_window": [
+          {
+            "frame": 455,
+            "peak_middle_third_all": [
+              3,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 456,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              1,
+              1
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 457,
+            "peak_middle_third_all": [
+              3,
+              2,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              2,
+              2
+            ]
+          }
+        ]
+      },
+      "50i_burned_TC": {
+        "frame": 231,
+        "three_frame_window": [
+          {
+            "frame": 230,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              3
+            ]
+          },
+          {
+            "frame": 231,
+            "peak_middle_third_all": [
+              3,
+              3,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              2
+            ]
+          },
+          {
+            "frame": 232,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              3
+            ]
+          }
+        ]
+      },
+      "50i_if_field_count": {
+        "frame": 228,
+        "three_frame_window": [
+          {
+            "frame": 227,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 228,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              1
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 229,
+            "peak_middle_third_all": [
+              3,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          }
+        ],
+        "field": "top"
+      },
+      "prism": "not captured at this mark"
+    },
+    "09:21": {
+      "50p": {
+        "frame": 471,
+        "three_frame_window": [
+          {
+            "frame": 470,
+            "peak_middle_third_all": [
+              2,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              3,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 471,
+            "peak_middle_third_all": [
+              2,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              3,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              3,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 472,
+            "peak_middle_third_all": [
+              2,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              2,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              2,
+              3,
+              3
+            ]
+          }
+        ]
+      },
+      "50i_burned_TC": {
+        "frame": 246,
+        "three_frame_window": [
+          {
+            "frame": 245,
+            "peak_middle_third_all": [
+              3,
+              4,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              0,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              5,
+              5,
+              5
+            ]
+          },
+          {
+            "frame": 246,
+            "peak_middle_third_all": [
+              2,
+              2,
+              2
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              0,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              5,
+              4,
+              4
+            ]
+          },
+          {
+            "frame": 247,
+            "peak_middle_third_all": [
+              5,
+              5,
+              4
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              0,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              5,
+              5,
+              4
+            ]
+          }
+        ]
+      },
+      "50i_if_field_count": {
+        "frame": 235,
+        "three_frame_window": [
+          {
+            "frame": 234,
+            "peak_middle_third_all": [
+              2,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              3,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              4,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 235,
+            "peak_middle_third_all": [
+              2,
+              2,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              3,
+              2,
+              2
+            ],
+            "peak_outside_overlays": [
+              4,
+              2,
+              3
+            ]
+          },
+          {
+            "frame": 236,
+            "peak_middle_third_all": [
+              2,
+              3,
+              3
+            ],
+            "peak_rightmost128_columns_outside_overlays": [
+              0,
+              0,
+              0
+            ],
+            "peak_outside_overlays": [
+              3,
+              3,
+              3
+            ]
+          }
+        ],
+        "field": "bottom"
+      },
+      "prism": "not captured at this mark"
+    }
+  },
+  "lower_quarter_50p": {
+    "file_and_reference_sha256": {
+      "Bars_1920x1080_50p_10bit.mov": "ffe87de0148423f7ecbe893709f4832d1a867cae35b4f1e36a2803c75cbccc85",
+      "reference.mkv": "b8492864642da6d53e753f29a75d1b515f81051dc9e36687a8ffee3c9a371a98"
+    },
+    "all_pixel_observations": 259200000,
+    "unmasked_pixel_observations": 195082476,
+    "peak_decoded_luma_vs_shifted_plate": 2,
+    "single_frame_bright_pulses_above_64_unmasked": 0
+  },
+  "physical_observation": {
+    "route": "Shogun SDI out to PRISM SDI 1",
+    "format": "1920x1080p50",
+    "samples_identified_as_50p": 144,
+    "distinct_50p_frames": 23,
+    "frame43_sample_indices": [
+      94,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115
+    ],
+    "neighbour_examples": [
+      95,
+      97,
+      116
+    ],
+    "preview_raster": [
+      862,
+      485
+    ],
+    "strip_xy_inclusive": [
+      690,
+      481,
+      804,
+      484
+    ],
+    "frame_42_43_44_changed_pixels_in_preview_strip_relative_to_row_470": [
+      0,
+      460,
+      0
+    ],
+    "frame43_preview_minus_row470_rgb_extrema": [
+      -33,
+      78
+    ],
+    "approximate_source_rectangle_xy_inclusive": [
+      1536,
+      1072,
+      1791,
+      1079
+    ],
+    "lossless_ffmpeg_and_apple_constant_codes_at_frames_42_43_44": [
+      195,
+      512,
+      512
+    ],
+    "prores_slice_indices": [
+      1017,
+      1018
+    ],
+    "slice_bytes_per_slice": 19,
+    "slice_sha256_across_frames_42_43_44": "86953cd007ad59232fbe00f1923af0720cdbf38e41bb75a9bdf9c42086243ce2",
+    "subsequent_5994i_held_picture_samples": 530
+  },
+  "controls": {
+    "50p": {
+      "files": {
+        "AppleHQ": {
+          "file": "Bars_1920x1080_50p_10bit_AppleHQ_AB.mov",
+          "sha256": "4bad25502c2fb128c2daa840f9fe524f811ca793b00b66a995bf219ffe15eb0c"
+        },
+        "Remux": {
+          "file": "Bars_1920x1080_50p_10bit_Remux_AB.mov",
+          "sha256": "03b8f23abd6ef5ba5595410253780169c9ff944e529d5dea61e75892ee72b43a"
+        },
+        "FFmpegQ1": {
+          "file": "Bars_1920x1080_50p_10bit_FFmpegQ1_AB.mov",
+          "sha256": "7ef56d31f371fb63de4bc27a6981e719e1bb3aaef238dcbf9ca7e37dda8a5d25"
+        }
+      },
+      "remux": {
+        "packets": [
+          500,
+          469
+        ],
+        "matching_payloads_and_timestamps": true,
+        "first_video_file_offsets": [
+          7853,
+          36
+        ]
+      },
+      "apple": {
+        "status": "checks passed",
+        "errors": [],
+        "review": [],
+        "audio_identical": true,
+        "scan": {
+          "frame_colour": {
+            "color_space": {
+              "bt709": 500
+            },
+            "color_primaries": {
+              "bt709": 500
+            },
+            "color_transfer": {
+              "bt709": 500
+            },
+            "color_range": {
+              "tv": 500
+            }
+          },
+          "cadence": {
+            "timestamps": 500,
+            "non_increasing": 0,
+            "max_error_ticks": 0.0,
+            "time_base": "1/12800"
+          },
+          "scan_counts": {
+            "progressive": 500,
+            "tff": 0,
+            "bff": 0
+          },
+          "decoded_frames": 500,
+          "consecutive_identical": 0,
+          "near_freezes": 0,
+          "first_freeze_starts_seconds": [],
+          "sample_extrema": {
+            "YMIN": 45.0,
+            "YMAX": 941.0,
+            "UMIN": 63.0,
+            "UMAX": 961.0,
+            "VMIN": 63.0,
+            "VMAX": 961.0
+          }
+        },
+        "loop_boundary": {
+          "picture": {
+            "seam_mean": 1.6217071759259258,
+            "adjacent_means": [
+              1.569201388888889,
+              1.5811342592592592
+            ]
+          },
+          "audio": [
+            {
+              "stream": 1,
+              "samples_per_channel": 480000,
+              "rate": 48000,
+              "offset_from_video_samples": 0,
+              "start_offset_samples": 0,
+              "join_step_s16": [
+                428,
+                428
+              ]
+            }
+          ]
+        },
+        "comparison": {
+          "frames": 500,
+          "top_half": {
+            "mean_error": 0.0013265174897119341,
+            "large_error_fraction": 0.0,
+            "peak": 4
+          },
+          "bottom_half": {
+            "mean_error": 0.0029983281893004115,
+            "large_error_fraction": 0.0,
+            "peak": 4
+          },
+          "flat_channel_samples": 217339200,
+          "flat_large_errors": 0,
+          "first_flat_error": null
+        }
+      },
+      "FFmpegQ1": {
+        "original_pcm_packets_and_timestamps_identical": true,
+        "tested_video_packets_and_timestamps_identical": true,
+        "verification": {
+          "status": "checks passed",
+          "errors": [],
+          "review": [],
+          "scan": {
+            "frame_colour": {
+              "color_space": {
+                "bt709": 500
+              },
+              "color_primaries": {
+                "bt709": 500
+              },
+              "color_transfer": {
+                "bt709": 500
+              },
+              "color_range": {
+                "tv": 500
+              }
+            },
+            "cadence": {
+              "timestamps": 500,
+              "non_increasing": 0,
+              "max_error_ticks": 0.0,
+              "time_base": "1/12800"
+            },
+            "scan_counts": {
+              "progressive": 500,
+              "tff": 0,
+              "bff": 0
+            },
+            "decoded_frames": 500,
+            "consecutive_identical": 0,
+            "near_freezes": 0,
+            "first_freeze_starts_seconds": [],
+            "sample_extrema": {
+              "YMIN": 45.0,
+              "YMAX": 942.0,
+              "UMIN": 63.0,
+              "UMAX": 961.0,
+              "VMIN": 63.0,
+              "VMAX": 962.0
+            }
+          },
+          "loop_boundary": {
+            "picture": {
+              "seam_mean": 1.621689814814815,
+              "adjacent_means": [
+                1.5691493055555557,
+                1.5809895833333334
+              ]
+            },
+            "audio": [
+              {
+                "stream": 1,
+                "samples_per_channel": 480000,
+                "rate": 48000,
+                "offset_from_video_samples": 0,
+                "start_offset_samples": 0,
+                "join_step_s16": [
+                  428,
+                  428
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "50i": {
+      "files": {
+        "AppleHQ": {
+          "file": "Bars_1920x1080_50i_10bit_AppleHQ_AB.mov",
+          "sha256": "c35951a00b939734388a3971135b9451ae9900cb6332f0adc9fd20798f27d7d8"
+        },
+        "Remux": {
+          "file": "Bars_1920x1080_50i_10bit_Remux_AB.mov",
+          "sha256": "dc249e3baf0ad137b05a45f4640bf368f2abfd151b82676c242b4c456afed2cb"
+        },
+        "FFmpegQ1": {
+          "file": "Bars_1920x1080_50i_10bit_FFmpegQ1_AB.mov",
+          "sha256": "573d2d289773b9ff9e525ca4b4e6456bd7da866a5964c013a92189fd678ada64"
+        },
+        "TopFieldTag": {
+          "file": "Bars_1920x1080_50i_10bit_TopFieldTag_AB.mov",
+          "sha256": "0f49e5dc0d28f32dea495ab9f77d9a9e232d5e530d746cde5241a171f195063e"
+        }
+      },
+      "remux": {
+        "packets": [
+          250,
+          469
+        ],
+        "matching_payloads_and_timestamps": true,
+        "first_video_file_offsets": [
+          5101,
+          36
+        ]
+      },
+      "apple": {
+        "status": "checks passed",
+        "errors": [],
+        "review": [],
+        "audio_identical": true,
+        "scan": {
+          "frame_colour": {
+            "color_space": {
+              "bt709": 250
+            },
+            "color_primaries": {
+              "bt709": 250
+            },
+            "color_transfer": {
+              "bt709": 250
+            },
+            "color_range": {
+              "tv": 250
+            }
+          },
+          "cadence": {
+            "timestamps": 250,
+            "non_increasing": 0,
+            "max_error_ticks": 0.0,
+            "time_base": "1/12800"
+          },
+          "scan_counts": {
+            "progressive": 0,
+            "tff": 250,
+            "bff": 0
+          },
+          "decoded_frames": 250,
+          "consecutive_identical": 0,
+          "near_freezes": 0,
+          "first_freeze_starts_seconds": [],
+          "sample_extrema": {
+            "YMIN": 45.0,
+            "YMAX": 941.0,
+            "UMIN": 63.0,
+            "UMAX": 961.0,
+            "VMIN": 63.0,
+            "VMAX": 961.0
+          }
+        },
+        "loop_boundary": {
+          "picture": {
+            "seam_mean": 3.0693229166666667,
+            "adjacent_means": [
+              3.081001157407407,
+              2.9182581018518516
+            ]
+          },
+          "audio": [
+            {
+              "stream": 1,
+              "samples_per_channel": 480000,
+              "rate": 48000,
+              "offset_from_video_samples": 0,
+              "start_offset_samples": 0,
+              "join_step_s16": [
+                428,
+                428
+              ]
+            }
+          ]
+        },
+        "comparison": {
+          "frames": 250,
+          "top_half": {
+            "mean_error": 0.0021389531893004116,
+            "large_error_fraction": 0.0,
+            "peak": 4
+          },
+          "bottom_half": {
+            "mean_error": 0.005107060185185185,
+            "large_error_fraction": 0.0,
+            "peak": 4
+          },
+          "flat_channel_samples": 110030400,
+          "flat_large_errors": 0,
+          "first_flat_error": null
+        },
+        "bitstream_tff_two_pictures": 250
+      },
+      "FFmpegQ1": {
+        "original_pcm_packets_and_timestamps_identical": true,
+        "tested_video_packets_and_timestamps_identical": true,
+        "verification": {
+          "status": "checks passed",
+          "errors": [],
+          "review": [],
+          "scan": {
+            "frame_colour": {
+              "color_space": {
+                "bt709": 250
+              },
+              "color_primaries": {
+                "bt709": 250
+              },
+              "color_transfer": {
+                "bt709": 250
+              },
+              "color_range": {
+                "tv": 250
+              }
+            },
+            "cadence": {
+              "timestamps": 250,
+              "non_increasing": 0,
+              "max_error_ticks": 0.0,
+              "time_base": "1/12800"
+            },
+            "scan_counts": {
+              "progressive": 0,
+              "tff": 250,
+              "bff": 0
+            },
+            "decoded_frames": 250,
+            "consecutive_identical": 0,
+            "near_freezes": 0,
+            "first_freeze_starts_seconds": [],
+            "sample_extrema": {
+              "YMIN": 45.0,
+              "YMAX": 942.0,
+              "UMIN": 63.0,
+              "UMAX": 961.0,
+              "VMIN": 62.0,
+              "VMAX": 961.0
+            }
+          },
+          "loop_boundary": {
+            "picture": {
+              "seam_mean": 3.068900462962963,
+              "adjacent_means": [
+                3.0808912037037035,
+                2.9183622685185187
+              ]
+            },
+            "audio": [
+              {
+                "stream": 1,
+                "samples_per_channel": 480000,
+                "rate": 48000,
+                "offset_from_video_samples": 0,
+                "start_offset_samples": 0,
+                "join_step_s16": [
+                  428,
+                  428
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "TopFieldTag": {
+        "byte_offset": 584,
+        "old_detail": 9,
+        "new_detail": 1,
+        "sole_byte_difference": true,
+        "verification": {
+          "status": "checks passed",
+          "errors": [],
+          "review": [],
+          "scan": {
+            "frame_colour": {
+              "color_space": {
+                "bt709": 250
+              },
+              "color_primaries": {
+                "bt709": 250
+              },
+              "color_transfer": {
+                "bt709": 250
+              },
+              "color_range": {
+                "tv": 250
+              }
+            },
+            "cadence": {
+              "timestamps": 250,
+              "non_increasing": 0,
+              "max_error_ticks": 0.0,
+              "time_base": "1/12800"
+            },
+            "scan_counts": {
+              "progressive": 0,
+              "tff": 250,
+              "bff": 0
+            },
+            "decoded_frames": 250,
+            "consecutive_identical": 0,
+            "near_freezes": 0,
+            "first_freeze_starts_seconds": [],
+            "sample_extrema": {
+              "YMIN": 25.0,
+              "YMAX": 1009.0,
+              "UMIN": 61.0,
+              "UMAX": 961.0,
+              "VMIN": 62.0,
+              "VMAX": 961.0
+            }
+          },
+          "loop_boundary": {
+            "picture": {
+              "seam_mean": 3.069363425925926,
+              "adjacent_means": [
+                3.0813483796296297,
+                2.9182638888888888
+              ]
+            },
+            "audio": [
+              {
+                "stream": 1,
+                "samples_per_channel": 480000,
+                "rate": 48000,
+                "offset_from_video_samples": 0,
+                "start_offset_samples": 0,
+                "join_step_s16": [
+                  428,
+                  428
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "graphics_quantisation": {
+    "50p": {
+      "delivery": {
+        "frames": 500,
+        "full_raster_peak": [
+          155,
+          25,
+          153
+        ],
+        "count_samples_over_64": [
+          47594,
+          0,
+          92
+        ],
+        "count_frames_over_64": [
+          500,
+          0,
+          32
+        ],
+        "peak_locations": [
+          [
+            112,
+            877,
+            969
+          ],
+          [
+            131,
+            496,
+            976
+          ],
+          [
+            137,
+            528,
+            976
+          ]
+        ],
+        "example": {
+          "frame": 43,
+          "luma_peak": 140,
+          "luma_samples_above_64": 95,
+          "luma_gt64_box_xyxy": [
+            770,
+            962,
+            1401,
+            985
+          ]
+        },
+        "video_stream": {
+          "codec_name": "prores",
+          "profile": "HQ",
+          "field_order": "progressive",
+          "bit_rate": "67802896",
+          "nb_frames": "500"
+        }
+      },
+      "AppleHQ": {
+        "frames": 500,
+        "full_raster_peak": [
+          2,
+          2,
+          2
+        ],
+        "count_samples_over_64": [
+          0,
+          0,
+          0
+        ],
+        "count_frames_over_64": [
+          0,
+          0,
+          0
+        ],
+        "peak_locations": [
+          [
+            0,
+            1851,
+            116
+          ],
+          [
+            0,
+            925,
+            74
+          ],
+          [
+            0,
+            879,
+            87
+          ]
+        ],
+        "example": {
+          "frame": 43,
+          "luma_peak": 2,
+          "luma_samples_above_64": 0,
+          "luma_gt64_box_xyxy": null
+        },
+        "video_stream": {
+          "codec_name": "prores",
+          "profile": "HQ",
+          "field_order": "progressive",
+          "bit_rate": "79009241",
+          "nb_frames": "500"
+        }
+      },
+      "FFmpeg_Q1_diagnostic": {
+        "frames": 500,
+        "full_raster_peak": [
+          4,
+          3,
+          4
+        ],
+        "count_samples_over_64": [
+          0,
+          0,
+          0
+        ],
+        "count_frames_over_64": [
+          0,
+          0,
+          0
+        ],
+        "peak_locations": [
+          [
+            0,
+            760,
+            976
+          ],
+          [
+            0,
+            913,
+            37
+          ],
+          [
+            148,
+            901,
+            128
+          ]
+        ],
+        "example": {
+          "frame": 43,
+          "luma_peak": 4,
+          "luma_samples_above_64": 0,
+          "luma_gt64_box_xyxy": null
+        },
+        "video_stream": {
+          "codec_name": "prores",
+          "profile": "HQ",
+          "field_order": "progressive",
+          "bit_rate": "76926904",
+          "nb_frames": "500"
+        }
+      }
+    },
+    "50i": {
+      "delivery": {
+        "frames": 250,
+        "full_raster_peak": [
+          241,
+          23,
+          216
+        ],
+        "count_samples_over_64": [
+          119290,
+          0,
+          294
+        ],
+        "count_frames_over_64": [
+          250,
+          0,
+          22
+        ],
+        "peak_locations": [
+          [
+            57,
+            856,
+            974
+          ],
+          [
+            4,
+            55,
+            110
+          ],
+          [
+            56,
+            440,
+            960
+          ]
+        ],
+        "example": {
+          "frame": 94,
+          "luma_peak": 172,
+          "luma_samples_above_64": 454,
+          "luma_gt64_box_xyxy": [
+            672,
+            961,
+            1406,
+            989
+          ]
+        },
+        "video_stream": {
+          "codec_name": "prores",
+          "profile": "HQ",
+          "field_order": "tb",
+          "bit_rate": "40731422",
+          "nb_frames": "250"
+        }
+      },
+      "AppleHQ": {
+        "frames": 250,
+        "full_raster_peak": [
+          3,
+          3,
+          3
+        ],
+        "count_samples_over_64": [
+          0,
+          0,
+          0
+        ],
+        "count_frames_over_64": [
+          0,
+          0,
+          0
+        ],
+        "peak_locations": [
+          [
+            0,
+            7,
+            49
+          ],
+          [
+            0,
+            912,
+            132
+          ],
+          [
+            5,
+            39,
+            94
+          ]
+        ],
+        "example": {
+          "frame": 94,
+          "luma_peak": 2,
+          "luma_samples_above_64": 0,
+          "luma_gt64_box_xyxy": null
+        },
+        "video_stream": {
+          "codec_name": "prores",
+          "profile": "HQ",
+          "field_order": "tt",
+          "bit_rate": "48072384",
+          "nb_frames": "250"
+        }
+      },
+      "FFmpeg_Q1_diagnostic": {
+        "frames": 250,
+        "full_raster_peak": [
+          4,
+          4,
+          4
+        ],
+        "count_samples_over_64": [
+          0,
+          0,
+          0
+        ],
+        "count_frames_over_64": [
+          0,
+          0,
+          0
+        ],
+        "peak_locations": [
+          [
+            20,
+            344,
+            335
+          ],
+          [
+            44,
+            912,
+            132
+          ],
+          [
+            0,
+            925,
+            129
+          ]
+        ],
+        "example": {
+          "frame": 94,
+          "luma_peak": 3,
+          "luma_samples_above_64": 0,
+          "luma_gt64_box_xyxy": null
+        },
+        "video_stream": {
+          "codec_name": "prores",
+          "profile": "HQ",
+          "field_order": "tb",
+          "bit_rate": "47462099",
+          "nb_frames": "250"
+        }
+      }
+    },
+    "slice_quantiser_50p_frame43": {
+      "indices": [
+        923,
+        1017,
+        1018
+      ],
+      "order": [
+        "caption",
+        "bottom_edge_left",
+        "bottom_edge_right"
+      ],
+      "original": [
+        42,
+        4,
+        4
+      ],
+      "FFmpegQ1": [
+        1,
+        1,
+        1
+      ],
+      "AppleHQ": [
+        1,
+        1,
+        1
+      ]
+    }
+  }
+}

@@ -4,6 +4,14 @@ Open **Verify video** to check a completed export or upload a file. A completed 
 
 ## Signal and conversion qualification
 
+The [Shogun Classic SDI return test](shogun-sdi-return-1080p50.md) captured 1,800 frames of the updated 1080p50 export. It identifies four bottom-edge artefact timecodes and measures a stereo tone interruption at all three loop joins. The [original flicker investigation](shogun-flicker.md) documents the earlier frame-43 failure and the local checks at all fifteen reported positions.
+
+The [DXD-8 reference benchmark](decklink-reference-sweep.md) records which reference locked the UltraStudio for each SDI format, how PRISM measured its phase against PTP, and the results for generated and converted video at the loop joins.
+
+The [DeckLink format sweep](decklink-format-sweep.md) covers all 40 monitor files, 40 ProRes HQ scaler outputs and the 13 native SDI formats shared by the dashboard and the UltraStudio HD Mini. It includes the 1080p59.94 loop measurements and a 720p payload-identifier finding.
+
+The [1080p50 DeckLink benchmark](decklink-1080p50.md) compares SDI payload identifiers from the Shogun and UltraStudio and traces the lower-right white patch through encoding and physical playout.
+
 The November follow-up measures native HD bar codes, independent SDR colour transforms, picture timestamps and decoded colour signalling. It covers all four lengths, the codec-by-resolution sweep and conversion from both limited- and full-range test sources. The measurements, exceptions and reproduction commands are in the [signal qualification report](signal-qualification.md).
 
 ## Earlier profile qualification, 24 November 2026
